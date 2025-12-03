@@ -1,66 +1,112 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# SENA.ERP - Enterprise Resource Planning System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+![Laravel](https://img.shields.io/badge/Laravel-10.50.0-FF2D20?style=flat&logo=laravel&logoColor=white)
+![PHP](https://img.shields.io/badge/PHP-8.1+-777BB4?style=flat&logo=php&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?style=flat&logo=mysql&logoColor=white)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3.0-7952B3?style=flat&logo=bootstrap&logoColor=white)
 
-## About Laravel
+A comprehensive Enterprise Resource Planning system built with Laravel 10, covering 10 major business modules.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🚀 Features
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Core Modules
+- **👥 Human Resources** - Employee management, departments, designations
+- **💰 Payroll Management** - Salary structures, payroll processing, payments
+- **⏰ Attendance Tracking** - Check-in/out system, shift management, reports
+- **📦 Inventory Management** - Items, stock tracking, warehouses
+- **🛒 Purchase Management** - Vendors, PO, GRN, requisitions
+- **💼 Sales Management** - Customers, quotations, sales orders, invoices
+- **📊 Accounting & Finance** - COA, vouchers, ledgers, financial reports
+- **🚢 Import/Export** - Import indents, shipments, cost tracking
+- **🏦 LC Management** - Letter of credit applications, amendments
+- **📈 Reports & Analytics** - Comprehensive reporting across all modules
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🔑 Default Login
 
-## Learning Laravel
+**Email:** admin@senaerp.com  
+**Password:** password  
+**Role:** Super Admin
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+⚠️ **Important:** Change the default password after first login!
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## 🛠️ Quick Start
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 1. Install Dependencies
+```bash
+composer install
+npm install
+```
 
-## Laravel Sponsors
+### 2. Setup Environment
+```bash
+copy .env.example .env
+php artisan key:generate
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+### 3. Configure Database (.env)
+```env
+DB_DATABASE=sena_erp
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-### Premium Partners
+### 4. Import Database
+```powershell
+Get-Content "database\complete_schema.sql" | c:\xampp\mysql\bin\mysql -u root sena_erp
+Get-Content "database\schema_part2_leave_payroll_attendance.sql" | c:\xampp\mysql\bin\mysql -u root sena_erp
+Get-Content "database\schema_part3_inventory_purchase_sales.sql" | c:\xampp\mysql\bin\mysql -u root sena_erp
+Get-Content "database\schema_part4_accounting_import_lc.sql" | c:\xampp\mysql\bin\mysql -u root sena_erp
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+### 5. Run Application
+```bash
+php artisan storage:link
+npm run build
+php artisan serve
+```
 
-## Contributing
+Visit: http://localhost:8000
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 📊 Development Status
 
-## Code of Conduct
+**Current Version:** v0.5.0  
+**Progress:** 45% Complete
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### ✅ Completed
+- Authentication system
+- Dashboard with statistics
+- HR Module (Full CRUD)
+- Attendance Check-in/out
+- 20+ Models
+- Complete routing
 
-## Security Vulnerabilities
+### 🔄 In Progress
+- Inventory, Purchase, Sales modules
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+See [PROJECT_STATUS.md](PROJECT_STATUS.md) for detailed progress.
 
-## License
+## 📝 Usage
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Add Employee
+HR > Employees > Add New Employee
+
+### Record Attendance
+Attendance > Check-In/Out > Check In/Out buttons
+
+### Create Purchase Order
+Purchase > Purchase Orders > Create New PO
+
+## 🎨 Technology Stack
+
+- **Backend:** Laravel 10.50.0, PHP 8.1+
+- **Database:** MySQL 8.0
+- **Frontend:** Blade, Bootstrap 5.3.0, jQuery 3.7.0
+- **Icons:** Font Awesome 6.4.0
+
+## 📄 License
+
+MIT License
+
+---
+
+**Built with ❤️ using Laravel**
