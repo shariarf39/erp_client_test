@@ -53,7 +53,10 @@ class DepartmentController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $department = Department::with(['parent', 'manager', 'employees', 'children'])
+            ->findOrFail($id);
+        
+        return view('hr.departments.show', compact('department'));
     }
 
     /**
@@ -61,7 +64,13 @@ class DepartmentController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $department = Department::findOrFail($id);
+        $departments = Department::where('is_active', 1)
+            ->where('id', '!=', $id)
+            ->get(); // For parent department (exclude self)
+        $employees = \App\Models\Employee::where('status', 'Active')->get();
+        
+        return view('hr.departments.edit', compact('department', 'departments', 'employees'));
     }
 
     /**
@@ -69,7 +78,48 @@ class DepartmentController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $department = Department::findOrFail($id);
+        
+        $validated = $request->validate([
+            'code' => 'required|unique:departments,code,' . $id,
+            'name' => 'required|max:100',
+            'parent_id' => 'nullable|exists:departments,id',
+            'manager_id' => 'nullable|exists:employees,id',
+            'description' => 'nullable',
+            'is_active' => 'boolean',
+        ]);
+
+        // Prevent circular hierarchy
+        if ($request->parent_id && $this->wouldCreateCircularReference($id, $request->parent_id)) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['parent_id' => 'Cannot set parent department - would create circular reference.']);
+        }
+
+        $department->update($validated);
+
+        return redirect()->route('hr.departments.index')
+            ->with('success', 'Department updated successfully.');
+    }
+
+    /**
+     * Check if setting parent would create circular reference
+     */
+    private function wouldCreateCircularReference($departmentId, $parentId)
+    {
+        if ($departmentId == $parentId) {
+            return true;
+        }
+
+        $parent = Department::find($parentId);
+        while ($parent) {
+            if ($parent->id == $departmentId) {
+                return true;
+            }
+            $parent = $parent->parent;
+        }
+
+        return false;
     }
 
     /**
@@ -77,6 +127,23 @@ class DepartmentController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $department = Department::findOrFail($id);
+        
+        // Check if department has employees
+        if ($department->employees()->count() > 0) {
+            return redirect()->route('hr.departments.index')
+                ->with('error', 'Cannot delete department with active employees. Please reassign employees first.');
+        }
+        
+        // Check if department has sub-departments
+        if ($department->children()->count() > 0) {
+            return redirect()->route('hr.departments.index')
+                ->with('error', 'Cannot delete department with sub-departments. Please delete or reassign sub-departments first.');
+        }
+        
+        $department->delete();
+        
+        return redirect()->route('hr.departments.index')
+            ->with('success', 'Department deleted successfully.');
     }
 }
