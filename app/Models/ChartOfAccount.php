@@ -39,6 +39,16 @@ class ChartOfAccount extends Model
         return $this->hasMany(ChartOfAccount::class, 'parent_id');
     }
 
+    public function accountType()
+    {
+        return $this->belongsTo(AccountType::class);
+    }
+
+    public function voucherDetails()
+    {
+        return $this->hasMany(VoucherDetail::class, 'account_id');
+    }
+
     public function vouchers()
     {
         return $this->hasMany(Voucher::class, 'account_id');

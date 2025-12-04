@@ -58,4 +58,9 @@ class SalesOrder extends Model
     {
         return $this->belongsTo(User::class, 'created_by');
     }
+
+    public function details()
+    {
+        return $this->hasMany(SalesOrderDetail::class, 'so_id');
+    }
 }

@@ -130,12 +130,12 @@ All major store() methods implemented:
 | Stock | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | **100%** |
 | Categories | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | **100%** |
 | Warehouses | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | **100%** |
-| Vendors | ✅ | ✅ | ✅ | ⚠️ | ⚠️ | ⚠️ | 60% |
-| POs | ✅ | ✅ | ✅ | ⚠️ | ⚠️ | ⚠️ | 60% |
-| Customers | ✅ | ✅ | ✅ | ⚠️ | ⚠️ | ⚠️ | 60% |
-| SOs | ✅ | ✅ | ✅ | ⚠️ | ⚠️ | ⚠️ | 60% |
-| Accounts | ✅ | ✅ | ✅ | ⚠️ | ⚠️ | ⚠️ | 60% |
-| Vouchers | ✅ | ✅ | ✅ | ⚠️ | ⚠️ | ⚠️ | 60% |
+| Vendors | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | **100%** |
+| POs | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | **100%** |
+| Customers | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | **100%** |
+| SOs | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | **100%** |
+| Accounts | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | **100%** |
+| Vouchers | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | **100%** |
 
 **Overall Progress: 80% Core Features, 60% CRUD Operations**
 
