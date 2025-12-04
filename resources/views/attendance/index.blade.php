@@ -14,6 +14,21 @@
         </a>
     </div>
     <div class="card-body">
+        <!-- Alert Messages -->
+        @if(session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle me-2"></i>{{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle me-2"></i>{{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+
         <!-- Filters -->
         <form method="GET" action="{{ route('attendance.attendance.index') }}" class="mb-3">
             <div class="row">
@@ -65,6 +80,7 @@
                             <th>Working Hours</th>
                             <th>Status</th>
                             <th>Device</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -121,6 +137,30 @@
                                     @else
                                         <span class="text-muted">-</span>
                                     @endif
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a href="{{ route('attendance.attendance.show', $attendance) }}" 
+                                           class="btn btn-sm btn-info" 
+                                           title="View">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a href="{{ route('attendance.attendance.edit', $attendance) }}" 
+                                           class="btn btn-sm btn-warning" 
+                                           title="Edit">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <form action="{{ route('attendance.attendance.destroy', $attendance) }}" 
+                                              method="POST" 
+                                              style="display: inline;"
+                                              onsubmit="return confirm('Are you sure you want to delete this attendance record?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-danger" title="Delete">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach

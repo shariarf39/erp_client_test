@@ -123,9 +123,9 @@
                     <label for="department_id" class="form-label">Department <span class="text-danger">*</span></label>
                     <select class="form-control @error('department_id') is-invalid @enderror" id="department_id" name="department_id" required>
                         <option value="">Select Department</option>
-                        @foreach(\App\Models\Department::all() as $dept)
+                        @foreach(\App\Models\Department::where('is_active', 1)->get() as $dept)
                             <option value="{{ $dept->id }}" {{ old('department_id', $employee->department_id ?? '') == $dept->id ? 'selected' : '' }}>
-                                {{ $dept->department_name }}
+                                {{ $dept->code }} - {{ $dept->name }}
                             </option>
                         @endforeach
                     </select>
@@ -137,9 +137,9 @@
                     <label for="designation_id" class="form-label">Designation <span class="text-danger">*</span></label>
                     <select class="form-control @error('designation_id') is-invalid @enderror" id="designation_id" name="designation_id" required>
                         <option value="">Select Designation</option>
-                        @foreach(\App\Models\Designation::all() as $desig)
+                        @foreach(\App\Models\Designation::where('is_active', 1)->get() as $desig)
                             <option value="{{ $desig->id }}" {{ old('designation_id', $employee->designation_id ?? '') == $desig->id ? 'selected' : '' }}>
-                                {{ $desig->title }}
+                                {{ $desig->code }} - {{ $desig->name }}
                             </option>
                         @endforeach
                     </select>
@@ -151,9 +151,9 @@
                     <label for="branch_id" class="form-label">Branch</label>
                     <select class="form-control" id="branch_id" name="branch_id">
                         <option value="">Select Branch</option>
-                        @foreach(\App\Models\Branch::all() as $branch)
+                        @foreach(\App\Models\Branch::where('is_active', 1)->get() as $branch)
                             <option value="{{ $branch->id }}" {{ old('branch_id', $employee->branch_id ?? '') == $branch->id ? 'selected' : '' }}>
-                                {{ $branch->branch_name }}
+                                {{ $branch->code }} - {{ $branch->name }}
                             </option>
                         @endforeach
                     </select>

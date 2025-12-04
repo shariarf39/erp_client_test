@@ -17,11 +17,28 @@
             </nav>
         </div>
         <div>
+            <a href="{{ route('inventory.stock.create') }}" class="btn btn-primary me-2">
+                <i class="fas fa-plus"></i> Add Stock
+            </a>
             <a href="{{ route('inventory.stock.report') }}" class="btn btn-info">
                 <i class="fas fa-file-export"></i> Stock Report
             </a>
         </div>
     </div>
+
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i>{{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i>{{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
 
     <!-- Statistics Cards -->
     <div class="row mb-4">

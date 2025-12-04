@@ -160,32 +160,82 @@ class AttendanceController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Attendance $attendance)
     {
-        //
+        $attendance->load(['employee.department', 'employee.designation']);
+        return view('attendance.show', compact('attendance'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Attendance $attendance)
     {
-        //
+        $employees = Employee::where('status', 'Active')
+            ->with('department', 'designation')
+            ->orderBy('full_name')
+            ->get();
+
+        return view('attendance.edit', compact('attendance', 'employees'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Attendance $attendance)
     {
-        //
+        $validated = $request->validate([
+            'date' => 'required|date',
+            'check_in' => 'required|date_format:H:i',
+            'check_out' => 'nullable|date_format:H:i|after:check_in',
+            'status' => 'required|in:Present,Absent,Late,Half Day,Leave',
+            'overtime_hours' => 'nullable|numeric|min:0|max:24',
+            'remarks' => 'nullable|string|max:500',
+        ]);
+
+        try {
+            // Calculate working hours if check_out is provided
+            $workingHours = null;
+            if ($validated['check_out']) {
+                $checkInTime = Carbon::parse($validated['date'] . ' ' . $validated['check_in']);
+                $checkOutTime = Carbon::parse($validated['date'] . ' ' . $validated['check_out']);
+                $workingHours = $checkInTime->diffInHours($checkOutTime, true);
+            }
+
+            $attendance->update([
+                'date' => $validated['date'],
+                'check_in' => $validated['check_in'],
+                'check_out' => $validated['check_out'] ?? null,
+                'working_hours' => $workingHours,
+                'overtime_hours' => $validated['overtime_hours'] ?? 0,
+                'status' => $validated['status'],
+                'remarks' => $validated['remarks'] ?? null,
+            ]);
+
+            return redirect()->route('attendance.attendance.show', $attendance)
+                ->with('success', 'Attendance record updated successfully!');
+
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Error updating attendance: ' . $e->getMessage());
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Attendance $attendance)
     {
-        //
+        try {
+            $attendance->delete();
+
+            return redirect()->route('attendance.attendance.index')
+                ->with('success', 'Attendance record deleted successfully!');
+
+        } catch (\Exception $e) {
+            return redirect()->route('attendance.attendance.index')
+                ->with('error', 'Error deleting attendance: ' . $e->getMessage());
+        }
     }
 }

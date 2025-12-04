@@ -14,6 +14,20 @@
         </a>
     </div>
     <div class="card-body">
+        @if(session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-circle me-2"></i>{{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
         <!-- Search and Filter -->
         <form method="GET" action="{{ route('hr.employees.index') }}" class="mb-3">
             <div class="row">
@@ -25,7 +39,7 @@
                         <option value="">All Departments</option>
                         @foreach(\App\Models\Department::all() as $dept)
                             <option value="{{ $dept->id }}" {{ request('department_id') == $dept->id ? 'selected' : '' }}>
-                                {{ $dept->department_name }}
+                                {{ $dept->name }}
                             </option>
                         @endforeach
                     </select>
@@ -83,8 +97,8 @@
                             <td>
                                 <strong>{{ $employee->full_name }}</strong>
                             </td>
-                            <td>{{ $employee->department->department_name ?? 'N/A' }}</td>
-                            <td>{{ $employee->designation->title ?? 'N/A' }}</td>
+                            <td>{{ $employee->department->name ?? 'N/A' }}</td>
+                            <td>{{ $employee->designation->name ?? 'N/A' }}</td>
                             <td>{{ $employee->email }}</td>
                             <td>{{ $employee->phone }}</td>
                             <td>{{ \Carbon\Carbon::parse($employee->date_of_joining)->format('d M Y') }}</td>

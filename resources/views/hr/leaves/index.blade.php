@@ -2,6 +2,20 @@
 
 @section('content')
 <div class="container-fluid">
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>{{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
     <div class="row mb-4">
         <div class="col-md-12">
             <div class="d-flex justify-content-between align-items-center">
@@ -120,7 +134,7 @@
                                     </td>
                                     <td>{{ $leave->employee->department->name ?? 'N/A' }}</td>
                                     <td>
-                                        <span class="badge bg-info">{{ $leave->leaveType->leave_type_name ?? 'N/A' }}</span>
+                                        <span class="badge bg-info">{{ $leave->leaveType->name ?? 'N/A' }}</span>
                                     </td>
                                     <td>{{ $leave->from_date->format('M d, Y') }}</td>
                                     <td>{{ $leave->to_date->format('M d, Y') }}</td>
@@ -167,7 +181,59 @@
                                                    title="Edit">
                                                     <i class="bi bi-pencil"></i>
                                                 </a>
+                                                <form action="{{ route('hr.leaves.approve', $leave) }}" method="POST" class="d-inline">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-sm btn-success" title="Approve" onclick="return confirm('Approve this leave application?')">
+                                                        <i class="bi bi-check"></i>
+                                                    </button>
+                                                </form>
+                                                <button type="button" class="btn btn-sm btn-danger" title="Reject" 
+                                                        data-bs-toggle="modal" data-bs-target="#rejectModal{{ $leave->id }}">
+                                                    <i class="bi bi-x"></i>
+                                                </button>
                                             @endif
+                                            @if(in_array($leave->status, ['Pending', 'Approved']))
+                                                <form action="{{ route('hr.leaves.cancel', $leave) }}" method="POST" class="d-inline">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-sm btn-secondary" title="Cancel" onclick="return confirm('Cancel this leave application?')">
+                                                        <i class="bi bi-slash-circle"></i>
+                                                    </button>
+                                                </form>
+                                            @endif
+                                            @if(in_array($leave->status, ['Pending', 'Cancelled']))
+                                                <form action="{{ route('hr.leaves.destroy', $leave) }}" method="POST" class="d-inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm btn-dark" title="Delete" onclick="return confirm('Delete this leave application?')">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </form>
+                                            @endif
+                                        </div>
+
+                                        <!-- Reject Modal -->
+                                        <div class="modal fade" id="rejectModal{{ $leave->id }}" tabindex="-1">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <form action="{{ route('hr.leaves.reject', $leave) }}" method="POST">
+                                                        @csrf
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Reject Leave Application</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Rejection Reason <span class="text-danger">*</span></label>
+                                                                <textarea name="rejection_reason" class="form-control" rows="3" required></textarea>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                            <button type="submit" class="btn btn-danger">Reject Application</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>

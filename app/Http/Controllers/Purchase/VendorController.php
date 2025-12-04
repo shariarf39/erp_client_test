@@ -91,32 +91,80 @@ class VendorController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Vendor $vendor)
     {
-        //
+        $vendor->load(['purchaseOrders' => function($query) {
+            $query->orderBy('created_at', 'desc')->limit(10);
+        }]);
+        return view('purchase.vendors.show', compact('vendor'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Vendor $vendor)
     {
-        //
+        return view('purchase.vendors.edit', compact('vendor'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Vendor $vendor)
     {
-        //
+        $validated = $request->validate([
+            'vendor_code' => 'required|unique:vendors,vendor_code,' . $vendor->id,
+            'vendor_name' => 'required|max:255',
+            'company_name' => 'nullable|max:255',
+            'email' => 'nullable|email|max:150',
+            'phone' => 'nullable|max:20',
+            'address' => 'nullable',
+            'city' => 'nullable|max:100',
+            'country' => 'nullable|max:100',
+            'contact_person' => 'nullable|max:100',
+            'credit_limit' => 'nullable|numeric|min:0',
+            'credit_days' => 'nullable|integer|min:0',
+            'payment_terms' => 'nullable',
+            'tax_number' => 'nullable|max:50',
+            'bank_name' => 'nullable|max:100',
+            'bank_account' => 'nullable|max:50',
+            'rating' => 'nullable|numeric|min:0|max:5',
+            'is_active' => 'boolean',
+        ]);
+
+        try {
+            $vendor->update($validated);
+
+            return redirect()->route('purchase.vendors.show', $vendor)
+                ->with('success', 'Vendor updated successfully!');
+
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Error updating vendor: ' . $e->getMessage());
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Vendor $vendor)
     {
-        //
+        try {
+            // Check if vendor has purchase orders
+            if ($vendor->purchaseOrders()->count() > 0) {
+                return redirect()->route('purchase.vendors.index')
+                    ->with('error', 'Cannot delete vendor with existing purchase orders.');
+            }
+
+            $vendor->delete();
+
+            return redirect()->route('purchase.vendors.index')
+                ->with('success', 'Vendor deleted successfully!');
+
+        } catch (\Exception $e) {
+            return redirect()->route('purchase.vendors.index')
+                ->with('error', 'Error deleting vendor: ' . $e->getMessage());
+        }
     }
 }

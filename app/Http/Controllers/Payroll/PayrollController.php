@@ -142,32 +142,99 @@ class PayrollController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Payroll $payroll)
     {
-        //
+        $payroll->load(['employee.department', 'employee.designation', 'processor']);
+        return view('payroll.show', compact('payroll'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Payroll $payroll)
     {
-        //
+        // Only allow editing if status is Processed (not Paid or Draft)
+        if ($payroll->status === 'Paid') {
+            return redirect()->route('payroll.payroll.index')
+                ->with('error', 'Cannot edit payroll that has already been paid.');
+        }
+
+        $employees = \App\Models\Employee::where('status', 'Active')
+            ->with('department', 'designation')
+            ->orderBy('full_name')
+            ->get();
+
+        return view('payroll.edit', compact('payroll', 'employees'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Payroll $payroll)
     {
-        //
+        // Prevent updating if status is Paid
+        if ($payroll->status === 'Paid') {
+            return redirect()->route('payroll.payroll.index')
+                ->with('error', 'Cannot update payroll that has already been paid.');
+        }
+
+        $validated = $request->validate([
+            'overtime_hours' => 'nullable|numeric|min:0|max:999',
+            'overtime_amount' => 'nullable|numeric|min:0',
+            'total_allowance' => 'required|numeric|min:0',
+            'total_deduction' => 'required|numeric|min:0',
+            'status' => 'required|in:Draft,Processed,Paid',
+            'paid_at' => 'nullable|date',
+            'remarks' => 'nullable|string|max:500',
+        ]);
+
+        try {
+            // Recalculate gross and net salary
+            $grossSalary = $payroll->basic_salary + $validated['total_allowance'];
+            $netSalary = $grossSalary - $validated['total_deduction'] + ($validated['overtime_amount'] ?? 0);
+
+            $payroll->update([
+                'overtime_hours' => $validated['overtime_hours'] ?? 0,
+                'overtime_amount' => $validated['overtime_amount'] ?? 0,
+                'total_allowance' => $validated['total_allowance'],
+                'total_deduction' => $validated['total_deduction'],
+                'gross_salary' => $grossSalary,
+                'net_salary' => $netSalary,
+                'status' => $validated['status'],
+                'paid_at' => $validated['status'] === 'Paid' ? ($validated['paid_at'] ?? now()) : null,
+                'remarks' => $validated['remarks'] ?? null,
+            ]);
+
+            return redirect()->route('payroll.payroll.show', $payroll)
+                ->with('success', 'Payroll updated successfully!');
+
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Error updating payroll: ' . $e->getMessage());
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Payroll $payroll)
     {
-        //
+        // Only allow deletion if status is Draft or Processed (not Paid)
+        if ($payroll->status === 'Paid') {
+            return redirect()->route('payroll.payroll.index')
+                ->with('error', 'Cannot delete payroll that has already been paid.');
+        }
+
+        try {
+            $payroll->delete();
+
+            return redirect()->route('payroll.payroll.index')
+                ->with('success', 'Payroll record deleted successfully!');
+
+        } catch (\Exception $e) {
+            return redirect()->route('payroll.payroll.index')
+                ->with('error', 'Error deleting payroll: ' . $e->getMessage());
+        }
     }
 }

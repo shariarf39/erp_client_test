@@ -52,7 +52,10 @@ class StockController extends Controller
      */
     public function create()
     {
-        //
+        $items = Item::where('is_active', 1)->get();
+        $warehouses = Warehouse::where('is_active', 1)->get();
+        
+        return view('inventory.stock.create', compact('items', 'warehouses'));
     }
 
     /**
@@ -60,15 +63,52 @@ class StockController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'item_id' => 'required|exists:items,id',
+            'warehouse_id' => 'required|exists:warehouses,id',
+            'quantity' => 'required|numeric|min:0',
+            'reorder_level' => 'nullable|numeric|min:0',
+            'max_level' => 'nullable|numeric|min:0',
+            'remarks' => 'nullable|string|max:500',
+        ]);
+
+        try {
+            // Check if stock already exists for this item-warehouse combination
+            $existingStock = Stock::where('item_id', $validated['item_id'])
+                ->where('warehouse_id', $validated['warehouse_id'])
+                ->first();
+
+            if ($existingStock) {
+                return redirect()->back()
+                    ->withInput()
+                    ->with('error', 'Stock record already exists for this item in the selected warehouse. Please use edit to update.');
+            }
+
+            // Get item unit
+            $item = Item::find($validated['item_id']);
+            $validated['unit_id'] = $item->unit_id;
+            $validated['last_transaction_date'] = now();
+            $validated['last_transaction_type'] = 'IN';
+
+            Stock::create($validated);
+
+            return redirect()->route('inventory.stock.index')
+                ->with('success', 'Stock record created successfully!');
+
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Error creating stock: ' . $e->getMessage());
+        }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Stock $stock)
     {
-        //
+        $stock->load(['item.category', 'item.brand', 'item.unit', 'warehouse']);
+        return view('inventory.stock.show', compact('stock'));
     }
 
     /**
@@ -136,24 +176,88 @@ class StockController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Stock $stock)
     {
-        //
+        $stock->load(['item', 'warehouse']);
+        return view('inventory.stock.edit', compact('stock'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Stock $stock)
     {
-        //
+        $validated = $request->validate([
+            'adjustment_type' => 'required|in:add,subtract,set',
+            'adjustment_quantity' => 'required|numeric|min:0',
+            'reorder_level' => 'nullable|numeric|min:0',
+            'max_level' => 'nullable|numeric|min:0',
+            'remarks' => 'nullable|string|max:500',
+        ]);
+
+        try {
+            $oldQuantity = $stock->quantity;
+            
+            // Calculate new quantity based on adjustment type
+            switch ($validated['adjustment_type']) {
+                case 'add':
+                    $newQuantity = $oldQuantity + $validated['adjustment_quantity'];
+                    $transactionType = 'IN';
+                    break;
+                case 'subtract':
+                    $newQuantity = $oldQuantity - $validated['adjustment_quantity'];
+                    if ($newQuantity < 0) {
+                        return redirect()->back()
+                            ->withInput()
+                            ->with('error', 'Cannot subtract more than available stock.');
+                    }
+                    $transactionType = 'OUT';
+                    break;
+                case 'set':
+                    $newQuantity = $validated['adjustment_quantity'];
+                    $transactionType = $newQuantity > $oldQuantity ? 'IN' : 'OUT';
+                    break;
+            }
+
+            $stock->update([
+                'quantity' => $newQuantity,
+                'reorder_level' => $validated['reorder_level'] ?? $stock->reorder_level,
+                'max_level' => $validated['max_level'] ?? $stock->max_level,
+                'remarks' => $validated['remarks'] ?? $stock->remarks,
+                'last_transaction_date' => now(),
+                'last_transaction_type' => $transactionType,
+            ]);
+
+            return redirect()->route('inventory.stock.show', $stock)
+                ->with('success', 'Stock adjusted successfully! Old: ' . $oldQuantity . ', New: ' . $newQuantity);
+
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Error updating stock: ' . $e->getMessage());
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Stock $stock)
     {
-        //
+        try {
+            // Check if stock has quantity
+            if ($stock->quantity > 0) {
+                return redirect()->route('inventory.stock.index')
+                    ->with('error', 'Cannot delete stock with non-zero quantity. Please adjust stock to zero first.');
+            }
+
+            $stock->delete();
+
+            return redirect()->route('inventory.stock.index')
+                ->with('success', 'Stock record deleted successfully!');
+
+        } catch (\Exception $e) {
+            return redirect()->route('inventory.stock.index')
+                ->with('error', 'Error deleting stock: ' . $e->getMessage());
+        }
     }
 }

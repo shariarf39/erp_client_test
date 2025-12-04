@@ -17,7 +17,7 @@
                     </div>
                 @endif
                 <h4>{{ $employee->full_name }}</h4>
-                <p class="text-muted">{{ $employee->designation->title ?? 'N/A' }}</p>
+                <p class="text-muted">{{ $employee->designation->name ?? 'N/A' }}</p>
                 <span class="badge bg-{{ $employee->status === 'Active' ? 'success' : 'danger' }} mb-3">
                     {{ $employee->status }}
                 </span>
@@ -50,11 +50,11 @@
                     </tr>
                     <tr>
                         <td><strong>Department:</strong></td>
-                        <td>{{ $employee->department->department_name ?? 'N/A' }}</td>
+                        <td>{{ $employee->department->name ?? 'N/A' }}</td>
                     </tr>
                     <tr>
                         <td><strong>Branch:</strong></td>
-                        <td>{{ $employee->branch->branch_name ?? 'N/A' }}</td>
+                        <td>{{ $employee->branch->name ?? 'N/A' }}</td>
                     </tr>
                     <tr>
                         <td><strong>Type:</strong></td>
@@ -238,7 +238,7 @@
                                 <tbody>
                                     @foreach($employee->leaveBalances as $balance)
                                         <tr>
-                                            <td>{{ $balance->leaveType->leave_type_name ?? 'N/A' }}</td>
+                                            <td>{{ $balance->leaveType->name ?? 'N/A' }}</td>
                                             <td>{{ $balance->total_days }}</td>
                                             <td>{{ $balance->used_days }}</td>
                                             <td><strong>{{ $balance->available_days }}</strong></td>

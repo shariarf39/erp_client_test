@@ -98,6 +98,9 @@ class EmployeeController extends Controller
                 $validated['photo'] = $request->file('photo')->store('employees', 'public');
             }
 
+            // Set full name
+            $validated['employee_name'] = $validated['first_name'] . ' ' . $validated['last_name'];
+
             // Create employee
             $employee = Employee::create($validated);
 
@@ -197,6 +200,9 @@ class EmployeeController extends Controller
                 }
                 $validated['photo'] = $request->file('photo')->store('employees', 'public');
             }
+
+            // Set full name
+            $validated['employee_name'] = $validated['first_name'] . ' ' . $validated['last_name'];
 
             // Update employee
             $employee->update($validated);

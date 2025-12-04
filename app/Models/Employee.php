@@ -11,20 +11,21 @@ class Employee extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'employee_code', 'first_name', 'last_name', 'email', 'phone',
+        'employee_code', 'employee_name', 'first_name', 'last_name', 'email', 'phone',
         'date_of_birth', 'gender', 'marital_status', 'address', 'city',
         'state', 'country', 'postal_code', 'department_id', 'designation_id',
-        'branch_id', 'manager_id', 'employment_type', 'join_date',
-        'confirmation_date', 'resign_date', 'status', 'photo', 'national_id',
-        'passport_no', 'bank_name', 'bank_account', 'bank_branch',
-        'emergency_contact_name', 'emergency_contact_phone', 'created_by'
+        'branch_id', 'manager_id', 'employee_type', 'date_of_joining',
+        'confirmation_date', 'resignation_date', 'status', 'photo', 'nid_no',
+        'passport_no', 'tin_no', 'bank_name', 'account_no', 'bank_branch',
+        'emergency_contact', 'father_name', 'mother_name',
+        'present_address', 'permanent_address', 'created_by'
     ];
 
     protected $casts = [
         'date_of_birth' => 'date',
-        'join_date' => 'date',
+        'date_of_joining' => 'date',
         'confirmation_date' => 'date',
-        'resign_date' => 'date',
+        'resignation_date' => 'date',
     ];
 
     // Relationships
@@ -91,7 +92,12 @@ class Employee extends Model
     // Accessors
     public function getFullNameAttribute()
     {
-        return "{$this->first_name} {$this->last_name}";
+        return $this->employee_name ?? "{$this->first_name} {$this->last_name}";
+    }
+
+    public function getEmployeeNameAttribute($value)
+    {
+        return $value ?? "{$this->first_name} {$this->last_name}";
     }
 
     // Scopes

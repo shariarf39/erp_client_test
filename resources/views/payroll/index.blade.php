@@ -133,6 +133,18 @@
                                                     <i class="bi bi-pencil"></i>
                                                 </a>
                                             @endif
+                                            @if($payroll->status !== 'Paid')
+                                                <form action="{{ route('payroll.payroll.destroy', $payroll) }}" 
+                                                      method="POST" 
+                                                      style="display: inline;"
+                                                      onsubmit="return confirm('Are you sure you want to delete this payroll record?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm btn-danger" title="Delete">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </form>
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>
