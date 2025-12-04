@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Inventory;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -12,7 +13,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        $categories = Category::with('parent')->orderBy('category_name')->paginate(20);
+        return view('inventory.categories.index', compact('categories'));
     }
 
     /**
@@ -20,7 +22,8 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        $parentCategories = Category::where('is_active', 1)->get();
+        return view('inventory.categories.create', compact('parentCategories'));
     }
 
     /**
@@ -28,7 +31,18 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'category_code' => 'required|unique:categories',
+            'category_name' => 'required|max:255',
+            'parent_id' => 'nullable|exists:categories,id',
+            'description' => 'nullable',
+            'is_active' => 'boolean',
+        ]);
+
+        Category::create($validated);
+
+        return redirect()->route('inventory.categories.index')
+            ->with('success', 'Category created successfully.');
     }
 
     /**

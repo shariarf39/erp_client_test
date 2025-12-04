@@ -62,7 +62,22 @@ class ChartOfAccountController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'account_code' => 'required|unique:chart_of_accounts',
+            'account_name' => 'required|max:255',
+            'account_type_id' => 'required|exists:account_types,id',
+            'parent_id' => 'nullable|exists:chart_of_accounts,id',
+            'description' => 'nullable',
+            'opening_balance' => 'nullable|numeric',
+            'is_active' => 'boolean',
+        ]);
+
+        $validated['current_balance'] = $validated['opening_balance'] ?? 0;
+
+        ChartOfAccount::create($validated);
+
+        return redirect()->route('accounting.chart-of-accounts.index')
+            ->with('success', 'Account created successfully.');
     }
 
     /**

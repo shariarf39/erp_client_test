@@ -33,7 +33,19 @@ class DepartmentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'code' => 'required|unique:departments',
+            'name' => 'required|max:100',
+            'parent_id' => 'nullable|exists:departments,id',
+            'manager_id' => 'nullable|exists:employees,id',
+            'description' => 'nullable',
+            'is_active' => 'boolean',
+        ]);
+
+        \App\Models\Department::create($validated);
+
+        return redirect()->route('hr.departments.index')
+            ->with('success', 'Department created successfully.');
     }
 
     /**

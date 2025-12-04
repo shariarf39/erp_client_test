@@ -62,7 +62,20 @@ class LeaveController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'employee_id' => 'required|exists:employees,id',
+            'leave_type_id' => 'required|exists:leave_types,id',
+            'from_date' => 'required|date',
+            'to_date' => 'required|date|after_or_equal:from_date',
+            'days' => 'required|numeric|min:0.5',
+            'reason' => 'required',
+            'status' => 'required|in:Pending,Approved,Rejected,Cancelled',
+        ]);
+
+        LeaveApplication::create($validated);
+
+        return redirect()->route('hr.leaves.index')
+            ->with('success', 'Leave application submitted successfully.');
     }
 
     /**

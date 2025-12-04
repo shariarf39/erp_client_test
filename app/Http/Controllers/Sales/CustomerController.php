@@ -55,7 +55,30 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'customer_code' => 'required|unique:customers',
+            'customer_name' => 'required|max:255',
+            'company_name' => 'nullable|max:255',
+            'email' => 'nullable|email|max:150',
+            'phone' => 'nullable|max:20',
+            'address' => 'nullable',
+            'city' => 'nullable|max:100',
+            'country' => 'nullable|max:100',
+            'contact_person' => 'nullable|max:100',
+            'credit_limit' => 'nullable|numeric|min:0',
+            'credit_days' => 'nullable|integer|min:0',
+            'opening_balance' => 'nullable|numeric',
+            'tax_number' => 'nullable|max:50',
+            'is_active' => 'boolean',
+        ]);
+
+        $validated['current_balance'] = $validated['opening_balance'] ?? 0;
+        $validated['created_by'] = auth()->id();
+
+        Customer::create($validated);
+
+        return redirect()->route('sales.customers.index')
+            ->with('success', 'Customer created successfully.');
     }
 
     /**

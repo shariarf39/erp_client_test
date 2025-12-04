@@ -60,7 +60,32 @@ class VendorController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'vendor_code' => 'required|unique:vendors',
+            'vendor_name' => 'required|max:255',
+            'company_name' => 'nullable|max:255',
+            'email' => 'nullable|email|max:150',
+            'phone' => 'nullable|max:20',
+            'address' => 'nullable',
+            'city' => 'nullable|max:100',
+            'country' => 'nullable|max:100',
+            'contact_person' => 'nullable|max:100',
+            'credit_limit' => 'nullable|numeric|min:0',
+            'credit_days' => 'nullable|integer|min:0',
+            'payment_terms' => 'nullable',
+            'tax_number' => 'nullable|max:50',
+            'bank_name' => 'nullable|max:100',
+            'bank_account' => 'nullable|max:50',
+            'rating' => 'nullable|numeric|min:0|max:5',
+            'is_active' => 'boolean',
+        ]);
+
+        $validated['created_by'] = auth()->id();
+
+        Vendor::create($validated);
+
+        return redirect()->route('purchase.vendors.index')
+            ->with('success', 'Vendor created successfully.');
     }
 
     /**

@@ -37,7 +37,33 @@ class ItemController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'item_code' => 'required|unique:items',
+            'item_name' => 'required|max:255',
+            'category_id' => 'required|exists:categories,id',
+            'brand_id' => 'nullable|exists:brands,id',
+            'unit_id' => 'required|exists:units,id',
+            'description' => 'nullable',
+            'barcode' => 'nullable|max:100',
+            'cost_price' => 'nullable|numeric|min:0',
+            'selling_price' => 'nullable|numeric|min:0',
+            'minimum_stock' => 'nullable|numeric|min:0',
+            'maximum_stock' => 'nullable|numeric|min:0',
+            'reorder_level' => 'nullable|numeric|min:0',
+            'image' => 'nullable|image|max:2048',
+            'is_active' => 'boolean',
+        ]);
+
+        if ($request->hasFile('image')) {
+            $validated['image'] = $request->file('image')->store('items', 'public');
+        }
+
+        $validated['created_by'] = auth()->id();
+
+        Item::create($validated);
+
+        return redirect()->route('inventory.items.index')
+            ->with('success', 'Item created successfully.');
     }
 
     /**
