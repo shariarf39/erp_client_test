@@ -36,6 +36,36 @@ Route::middleware('auth')->group(function () {
         Route::post('leaves/{leave}/approve', [\App\Http\Controllers\HR\LeaveController::class, 'approve'])->name('leaves.approve');
         Route::post('leaves/{leave}/reject', [\App\Http\Controllers\HR\LeaveController::class, 'reject'])->name('leaves.reject');
         Route::post('leaves/{leave}/cancel', [\App\Http\Controllers\HR\LeaveController::class, 'cancel'])->name('leaves.cancel');
+        
+        // Recruitment (ATS)
+        Route::prefix('recruitment')->name('recruitment.')->group(function () {
+            Route::resource('jobs', \App\Http\Controllers\HR\JobPostingController::class);
+            Route::resource('applicants', \App\Http\Controllers\HR\ApplicantController::class);
+            Route::resource('interviews', \App\Http\Controllers\HR\InterviewController::class);
+        });
+        
+        // Onboarding
+        Route::prefix('onboarding')->name('onboarding.')->group(function () {
+            Route::resource('checklists', \App\Http\Controllers\HR\OnboardingChecklistController::class);
+            Route::resource('employee-onboarding', \App\Http\Controllers\HR\EmployeeOnboardingController::class);
+        });
+        
+        // Shift Scheduling
+        Route::resource('shifts', \App\Http\Controllers\HR\ShiftController::class);
+        Route::resource('shift-schedules', \App\Http\Controllers\HR\ShiftScheduleController::class);
+        
+        // Performance & KPI
+        Route::prefix('performance')->name('performance.')->group(function () {
+            Route::resource('kpis', \App\Http\Controllers\HR\PerformanceKpiController::class);
+            Route::resource('reviews', \App\Http\Controllers\HR\PerformanceReviewController::class);
+        });
+        
+        // Training & Development
+        Route::prefix('training')->name('training.')->group(function () {
+            Route::resource('programs', \App\Http\Controllers\HR\TrainingProgramController::class);
+            Route::resource('enrollments', \App\Http\Controllers\HR\TrainingEnrollmentController::class);
+            Route::resource('skills', \App\Http\Controllers\HR\EmployeeSkillController::class);
+        });
     });
     
     // Payroll Module

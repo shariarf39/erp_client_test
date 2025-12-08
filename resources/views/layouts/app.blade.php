@@ -111,6 +111,43 @@
             padding: 6px 12px;
             font-weight: 500;
         }
+        
+        /* Dropdown Menu Styles */
+        .nav-dropdown {
+            position: relative;
+        }
+        
+        .nav-dropdown > .nav-link {
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-dropdown > .nav-link .dropdown-arrow {
+            transition: transform 0.3s;
+        }
+        
+        .nav-dropdown.show > .nav-link .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+        
+        .nav-dropdown-menu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            padding-left: 15px;
+        }
+        
+        .nav-dropdown.show .nav-dropdown-menu {
+            max-height: 1000px;
+            transition: max-height 0.5s ease-in;
+        }
+        
+        .nav-dropdown-menu .nav-link {
+            padding: 8px 20px;
+            font-size: 0.9rem;
+        }
     </style>
     @stack('styles')
 </head>
@@ -129,16 +166,77 @@
                         <i class="fas fa-home"></i> Dashboard
                     </a>
                     
-                    <div class="text-white-50 small px-3 mt-3 mb-2">HR MANAGEMENT</div>
-                    <a class="nav-link {{ request()->routeIs('hr.*') ? 'active' : '' }}" href="{{ route('hr.employees.index') }}">
-                        <i class="fas fa-users"></i> Employees
-                    </a>
-                    <a class="nav-link" href="{{ route('hr.departments.index') }}">
-                        <i class="fas fa-sitemap"></i> Departments
-                    </a>
-                    <a class="nav-link" href="{{ route('hr.leaves.index') }}">
-                        <i class="fas fa-calendar-alt"></i> Leave Management
-                    </a>
+                    <!-- HR Management Dropdown -->
+                    <div class="nav-dropdown {{ request()->routeIs('hr.*') ? 'show' : '' }}">
+                        <a class="nav-link {{ request()->routeIs('hr.*') ? 'active' : '' }}">
+                            <span><i class="fas fa-users-cog"></i> HR Management</span>
+                            <i class="fas fa-chevron-down dropdown-arrow"></i>
+                        </a>
+                        <div class="nav-dropdown-menu">
+                            <!-- Basic HR -->
+                            <div class="text-white-50 small px-3 mt-2 mb-1" style="font-size: 0.75rem;">BASIC</div>
+                            <a class="nav-link {{ request()->routeIs('hr.employees.*') ? 'active' : '' }}" href="{{ route('hr.employees.index') }}">
+                                <i class="fas fa-users"></i> Employees
+                            </a>
+                            <a class="nav-link {{ request()->routeIs('hr.departments.*') ? 'active' : '' }}" href="{{ route('hr.departments.index') }}">
+                                <i class="fas fa-sitemap"></i> Departments
+                            </a>
+                            <a class="nav-link {{ request()->routeIs('hr.leaves.*') ? 'active' : '' }}" href="{{ route('hr.leaves.index') }}">
+                                <i class="fas fa-calendar-alt"></i> Leave Management
+                            </a>
+                            
+                            <!-- Recruitment -->
+                            <div class="text-white-50 small px-3 mt-3 mb-1" style="font-size: 0.75rem;">RECRUITMENT</div>
+                            <a class="nav-link {{ request()->routeIs('hr.recruitment.jobs.*') ? 'active' : '' }}" href="{{ route('hr.recruitment.jobs.index') }}">
+                                <i class="fas fa-briefcase"></i> Job Postings
+                            </a>
+                            <a class="nav-link {{ request()->routeIs('hr.recruitment.applicants.*') ? 'active' : '' }}" href="{{ route('hr.recruitment.applicants.index') }}">
+                                <i class="fas fa-user-plus"></i> Applicants
+                            </a>
+                            <a class="nav-link {{ request()->routeIs('hr.recruitment.interviews.*') ? 'active' : '' }}" href="{{ route('hr.recruitment.interviews.index') }}">
+                                <i class="fas fa-comments"></i> Interviews
+                            </a>
+                            
+                            <!-- Onboarding -->
+                            <div class="text-white-50 small px-3 mt-3 mb-1" style="font-size: 0.75rem;">ONBOARDING</div>
+                            <a class="nav-link {{ request()->routeIs('hr.onboarding.checklists.*') ? 'active' : '' }}" href="{{ route('hr.onboarding.checklists.index') }}">
+                                <i class="fas fa-list-check"></i> Checklists
+                            </a>
+                            <a class="nav-link {{ request()->routeIs('hr.onboarding.employee-onboarding.*') ? 'active' : '' }}" href="{{ route('hr.onboarding.employee-onboarding.index') }}">
+                                <i class="fas fa-user-check"></i> Employee Onboarding
+                            </a>
+                            
+                            <!-- Shift Management -->
+                            <div class="text-white-50 small px-3 mt-3 mb-1" style="font-size: 0.75rem;">SHIFT MANAGEMENT</div>
+                            <a class="nav-link {{ request()->routeIs('hr.shifts.*') ? 'active' : '' }}" href="{{ route('hr.shifts.index') }}">
+                                <i class="fas fa-business-time"></i> Shifts
+                            </a>
+                            <a class="nav-link {{ request()->routeIs('hr.shift-schedules.*') ? 'active' : '' }}" href="{{ route('hr.shift-schedules.index') }}">
+                                <i class="fas fa-calendar-week"></i> Shift Schedules
+                            </a>
+                            
+                            <!-- Performance -->
+                            <div class="text-white-50 small px-3 mt-3 mb-1" style="font-size: 0.75rem;">PERFORMANCE</div>
+                            <a class="nav-link {{ request()->routeIs('hr.performance.kpis.*') ? 'active' : '' }}" href="{{ route('hr.performance.kpis.index') }}">
+                                <i class="fas fa-chart-line"></i> KPIs
+                            </a>
+                            <a class="nav-link {{ request()->routeIs('hr.performance.reviews.*') ? 'active' : '' }}" href="{{ route('hr.performance.reviews.index') }}">
+                                <i class="fas fa-star"></i> Reviews
+                            </a>
+                            
+                            <!-- Training -->
+                            <div class="text-white-50 small px-3 mt-3 mb-1" style="font-size: 0.75rem;">TRAINING</div>
+                            <a class="nav-link {{ request()->routeIs('hr.training.programs.*') ? 'active' : '' }}" href="{{ route('hr.training.programs.index') }}">
+                                <i class="fas fa-graduation-cap"></i> Programs
+                            </a>
+                            <a class="nav-link {{ request()->routeIs('hr.training.enrollments.*') ? 'active' : '' }}" href="{{ route('hr.training.enrollments.index') }}">
+                                <i class="fas fa-user-graduate"></i> Enrollments
+                            </a>
+                            <a class="nav-link {{ request()->routeIs('hr.training.skills.*') ? 'active' : '' }}" href="{{ route('hr.training.skills.index') }}">
+                                <i class="fas fa-certificate"></i> Skills
+                            </a>
+                        </div>
+                    </div>
                     
                     <div class="text-white-50 small px-3 mt-3 mb-2">PAYROLL</div>
                     <a class="nav-link {{ request()->routeIs('payroll.*') ? 'active' : '' }}" href="{{ route('payroll.payroll.index') }}">
@@ -251,6 +349,22 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    
+    <script>
+        // Dropdown menu toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropdowns = document.querySelectorAll('.nav-dropdown > .nav-link');
+            
+            dropdowns.forEach(dropdown => {
+                dropdown.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const parent = this.parentElement;
+                    parent.classList.toggle('show');
+                });
+            });
+        });
+    </script>
+    
     @stack('scripts')
 </body>
 </html>
