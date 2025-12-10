@@ -108,6 +108,20 @@ Route::middleware('auth')->group(function () {
         Route::resource('orders', SalesOrderController::class);
         Route::resource('invoices', \App\Http\Controllers\Sales\InvoiceController::class);
         Route::post('orders/{id}/approve', [SalesOrderController::class, 'approve'])->name('orders.approve');
+        
+        // Pricing & Discounts
+        Route::get('pricing', [\App\Http\Controllers\Sales\PricingController::class, 'index'])->name('pricing.index');
+        Route::get('pricing/create', [\App\Http\Controllers\Sales\PricingController::class, 'create'])->name('pricing.create');
+        Route::post('pricing', [\App\Http\Controllers\Sales\PricingController::class, 'store'])->name('pricing.store');
+        
+        // Sales Contracts
+        Route::resource('contracts', \App\Http\Controllers\Sales\ContractController::class);
+        
+        // Delivery Notes
+        Route::resource('delivery-notes', \App\Http\Controllers\Sales\DeliveryNoteController::class);
+        
+        // Sales Analytics
+        Route::get('analytics', [\App\Http\Controllers\Sales\AnalyticsController::class, 'index'])->name('analytics.index');
     });
     
     // Accounting Module

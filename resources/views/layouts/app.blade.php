@@ -267,21 +267,120 @@
                         <i class="fas fa-truck"></i> Vendors
                     </a>
                     
-                    <div class="text-white-50 small px-3 mt-3 mb-2">SALES</div>
-                    <a class="nav-link {{ request()->routeIs('sales.*') ? 'active' : '' }}" href="{{ route('sales.orders.index') }}">
-                        <i class="fas fa-shopping-bag"></i> Sales Orders
-                    </a>
-                    <a class="nav-link" href="{{ route('sales.customers.index') }}">
-                        <i class="fas fa-user-tie"></i> Customers
-                    </a>
+                    <!-- Sales Manager Dropdown -->
+                    <div class="nav-dropdown {{ request()->routeIs('sales.quotations.*') || request()->routeIs('sales.orders.*') || request()->routeIs('sales.pricing.*') || request()->routeIs('sales.contracts.*') || request()->routeIs('sales.delivery-notes.*') || request()->routeIs('sales.invoices.*') || request()->routeIs('sales.analytics.*') ? 'show' : '' }}">
+                        <a class="nav-link {{ request()->routeIs('sales.quotations.*') || request()->routeIs('sales.orders.*') || request()->routeIs('sales.pricing.*') || request()->routeIs('sales.contracts.*') || request()->routeIs('sales.delivery-notes.*') || request()->routeIs('sales.invoices.*') || request()->routeIs('sales.analytics.*') ? 'active' : '' }}">
+                            <span><i class="fas fa-shopping-cart"></i> Sales & Order Management</span>
+                            <i class="fas fa-chevron-down dropdown-arrow"></i>
+                        </a>
+                        <div class="nav-dropdown-menu">
+                            <a class="nav-link {{ request()->routeIs('sales.quotations.*') ? 'active' : '' }}" href="{{ route('sales.quotations.index') }}">
+                                <i class="fas fa-file-alt"></i> Quotation Management
+                            </a>
+                            <a class="nav-link {{ request()->routeIs('sales.orders.*') ? 'active' : '' }}" href="{{ route('sales.orders.index') }}">
+                                <i class="fas fa-shopping-bag"></i> Sales Orders
+                            </a>
+                            <a class="nav-link {{ request()->routeIs('sales.pricing.*') ? 'active' : '' }}" href="{{ route('sales.pricing.index') }}">
+                                <i class="fas fa-tags"></i> Pricing & Discounts
+                            </a>
+                            <a class="nav-link {{ request()->routeIs('sales.contracts.*') ? 'active' : '' }}" href="{{ route('sales.contracts.index') }}">
+                                <i class="fas fa-file-contract"></i> Sales Contracts
+                            </a>
+                            <a class="nav-link {{ request()->routeIs('sales.delivery-notes.*') ? 'active' : '' }}" href="{{ route('sales.delivery-notes.index') }}">
+                                <i class="fas fa-truck"></i> Delivery Notes
+                            </a>
+                            <a class="nav-link {{ request()->routeIs('sales.invoices.*') ? 'active' : '' }}" href="{{ route('sales.invoices.index') }}">
+                                <i class="fas fa-file-invoice-dollar"></i> Sales Invoicing
+                            </a>
+                            <a class="nav-link {{ request()->routeIs('sales.analytics.*') ? 'active' : '' }}" href="{{ route('sales.analytics.index') }}">
+                                <i class="fas fa-chart-bar"></i> Sales Analytics
+                            </a>
+                        </div>
+                    </div>
                     
-                    <div class="text-white-50 small px-3 mt-3 mb-2">ACCOUNTING</div>
-                    <a class="nav-link {{ request()->routeIs('accounting.*') ? 'active' : '' }}" href="{{ route('accounting.vouchers.index') }}">
-                        <i class="fas fa-file-invoice-dollar"></i> Vouchers
-                    </a>
-                    <a class="nav-link" href="{{ route('accounting.chart-of-accounts.index') }}">
-                        <i class="fas fa-book"></i> Chart of Accounts
-                    </a>
+                    <!-- Operation Manager Dropdown -->
+                    <div class="nav-dropdown {{ request()->routeIs('sales.orders.*') || request()->routeIs('sales.delivery-notes.*') || request()->routeIs('sales.analytics.*') ? 'show' : '' }}">
+                        <a class="nav-link {{ request()->routeIs('sales.orders.*') || request()->routeIs('sales.delivery-notes.*') || request()->routeIs('sales.analytics.*') ? 'active' : '' }}">
+                            <span><i class="fas fa-cogs"></i> Operation Manager</span>
+                            <i class="fas fa-chevron-down dropdown-arrow"></i>
+                        </a>
+                        <div class="nav-dropdown-menu">
+                            <!-- Sales Orders Section -->
+                            <div class="text-white-50 small px-3 mt-2 mb-1" style="font-size: 0.75rem;">SALES ORDERS</div>
+                            <a class="nav-link {{ request()->routeIs('sales.orders.index') ? 'active' : '' }}" href="{{ route('sales.orders.index') }}">
+                                <i class="fas fa-list"></i> View All Orders
+                            </a>
+                            <a class="nav-link {{ request()->routeIs('sales.orders.create') ? 'active' : '' }}" href="{{ route('sales.orders.create') }}">
+                                <i class="fas fa-plus-circle"></i> Create Order
+                            </a>
+                            <a class="nav-link" href="{{ route('sales.orders.index') }}?status=Approved">
+                                <i class="fas fa-check-circle"></i> Approved Orders
+                            </a>
+                            <a class="nav-link" href="{{ route('sales.orders.index') }}?status=Processing">
+                                <i class="fas fa-sync"></i> Processing Orders
+                            </a>
+                            
+                            <!-- Delivery Notes Section -->
+                            <div class="text-white-50 small px-3 mt-3 mb-1" style="font-size: 0.75rem;">DELIVERY NOTES</div>
+                            <a class="nav-link {{ request()->routeIs('sales.delivery-notes.index') ? 'active' : '' }}" href="{{ route('sales.delivery-notes.index') }}">
+                                <i class="fas fa-list"></i> View All Deliveries
+                            </a>
+                            <a class="nav-link {{ request()->routeIs('sales.delivery-notes.create') ? 'active' : '' }}" href="{{ route('sales.delivery-notes.create') }}">
+                                <i class="fas fa-plus-circle"></i> Create Delivery Note
+                            </a>
+                            <a class="nav-link" href="{{ route('sales.delivery-notes.index') }}?status=Ready">
+                                <i class="fas fa-box"></i> Ready for Delivery
+                            </a>
+                            <a class="nav-link" href="{{ route('sales.delivery-notes.index') }}?status=In Transit">
+                                <i class="fas fa-truck-moving"></i> In Transit
+                            </a>
+                            <a class="nav-link" href="{{ route('sales.delivery-notes.index') }}?status=Delivered">
+                                <i class="fas fa-check-double"></i> Delivered
+                            </a>
+                            
+                            <!-- Sales Analytics Section -->
+                            <div class="text-white-50 small px-3 mt-3 mb-1" style="font-size: 0.75rem;">SALES ANALYTICS</div>
+                            <a class="nav-link {{ request()->routeIs('sales.analytics.index') ? 'active' : '' }}" href="{{ route('sales.analytics.index') }}">
+                                <i class="fas fa-chart-line"></i> Sales Dashboard
+                            </a>
+                            <a class="nav-link" href="{{ route('sales.analytics.index') }}?view=revenue">
+                                <i class="fas fa-dollar-sign"></i> Revenue Analysis
+                            </a>
+                            <a class="nav-link" href="{{ route('sales.analytics.index') }}?view=customers">
+                                <i class="fas fa-users"></i> Customer Analytics
+                            </a>
+                            <a class="nav-link" href="{{ route('sales.analytics.index') }}?view=trends">
+                                <i class="fas fa-chart-area"></i> Sales Trends
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Accounts & Finance Dropdown -->
+                    <div class="nav-dropdown {{ request()->routeIs('accounting.*') ? 'show' : '' }}">
+                        <a class="nav-link {{ request()->routeIs('accounting.*') ? 'active' : '' }}">
+                            <span><i class="fas fa-file-invoice-dollar"></i> Accounts & Finance</span>
+                            <i class="fas fa-chevron-down dropdown-arrow"></i>
+                        </a>
+                        <div class="nav-dropdown-menu">
+                            <a class="nav-link {{ request()->routeIs('accounting.chart-of-accounts.*') ? 'active' : '' }}" href="{{ route('accounting.chart-of-accounts.index') }}">
+                                <i class="fas fa-list-alt"></i> Chart of Accounts
+                            </a>
+                            <a class="nav-link {{ request()->routeIs('accounting.vouchers.*') ? 'active' : '' }}" href="{{ route('accounting.vouchers.index') }}">
+                                <i class="fas fa-file-invoice"></i> Vouchers
+                            </a>
+                            
+                            <div class="text-white-50 small px-3 mt-3 mb-1" style="font-size: 0.75rem;">FINANCIAL REPORTS</div>
+                            <a class="nav-link" href="{{ route('accounting.reports.trial-balance') }}">
+                                <i class="fas fa-balance-scale"></i> Trial Balance
+                            </a>
+                            <a class="nav-link" href="{{ route('accounting.reports.profit-loss') }}">
+                                <i class="fas fa-chart-line"></i> Profit & Loss
+                            </a>
+                            <a class="nav-link" href="{{ route('accounting.reports.balance-sheet') }}">
+                                <i class="fas fa-file-invoice-dollar"></i> Balance Sheet
+                            </a>
+                        </div>
+                    </div>
                 </nav>
             </div>
 
