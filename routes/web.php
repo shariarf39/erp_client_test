@@ -27,6 +27,16 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
+    // Profile & Settings
+    Route::get('/profile', [\App\Http\Controllers\ProfileController::class, 'index'])->name('profile.index');
+    Route::put('/profile', [\App\Http\Controllers\ProfileController::class, 'updateProfile'])->name('profile.update');
+    Route::put('/profile/password', [\App\Http\Controllers\ProfileController::class, 'updatePassword'])->name('profile.password');
+    
+    Route::get('/settings', [\App\Http\Controllers\SettingsController::class, 'index'])->name('settings.index');
+    Route::put('/settings/notifications', [\App\Http\Controllers\SettingsController::class, 'updateNotifications'])->name('settings.notifications');
+    Route::put('/settings/security', [\App\Http\Controllers\SettingsController::class, 'updateSecurity'])->name('settings.security');
+    Route::put('/settings/preferences', [\App\Http\Controllers\SettingsController::class, 'updatePreferences'])->name('settings.preferences');
+    
     // HR Module
     Route::prefix('hr')->name('hr.')->group(function () {
         Route::resource('employees', EmployeeController::class);

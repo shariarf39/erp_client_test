@@ -67,7 +67,7 @@ class ContractController extends Controller
      */
     public function create()
     {
-        $customers = Customer::where('status', 'Active')->orderBy('name')->get();
+        $customers = Customer::where('is_active', 1)->orderBy('customer_name')->get();
         
         return view('sales.contracts.create', compact('customers'));
     }
@@ -115,7 +115,7 @@ class ContractController extends Controller
     public function edit($id)
     {
         $contract = DB::table('sales_orders')->where('id', $id)->first();
-        $customers = Customer::where('status', 'Active')->orderBy('name')->get();
+        $customers = Customer::where('is_active', 1)->orderBy('customer_name')->get();
         
         return view('sales.contracts.edit', compact('contract', 'customers'));
     }

@@ -89,6 +89,16 @@ class Employee extends Model
         return $this->hasMany(EmployeeDocument::class);
     }
 
+    public function employeeOnboarding()
+    {
+        return $this->hasOne(EmployeeOnboarding::class);
+    }
+
+    public function skills()
+    {
+        return $this->hasMany(EmployeeSkill::class);
+    }
+
     // Accessors
     public function getFullNameAttribute()
     {

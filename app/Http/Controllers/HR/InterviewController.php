@@ -55,7 +55,7 @@ class InterviewController extends Controller
         $applicants = Applicant::whereIn('status', ['Screening', 'Interview', 'Assessment'])
                                 ->orderBy('first_name')
                                 ->get();
-        $interviewers = User::where('status', 'Active')
+        $interviewers = User::where('is_active', 1)
                             ->orderBy('name')
                             ->get();
 

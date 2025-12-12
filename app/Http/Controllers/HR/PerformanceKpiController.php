@@ -52,7 +52,7 @@ class PerformanceKpiController extends Controller
     public function create()
     {
         $departments = Department::where('is_active', true)->orderBy('name')->get();
-        $designations = Designation::orderBy('name')->get();
+        $designations = Designation::orderBy('title')->get();
 
         return view('hr.performance.kpis.create', compact('departments', 'designations'));
     }
@@ -97,7 +97,7 @@ class PerformanceKpiController extends Controller
     public function edit(PerformanceKpi $kpi)
     {
         $departments = Department::where('is_active', true)->orderBy('name')->get();
-        $designations = Designation::orderBy('name')->get();
+        $designations = Designation::orderBy('title')->get();
 
         return view('hr.performance.kpis.edit', compact('kpi', 'departments', 'designations'));
     }

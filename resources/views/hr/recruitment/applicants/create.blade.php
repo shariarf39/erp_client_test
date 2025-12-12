@@ -1,0 +1,257 @@
+@extends('layouts.app')
+
+@section('title', 'Add New Applicant - SENA.ERP')
+
+@section('content')
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="mb-0"><i class="fas fa-user-plus me-2"></i>Add New Applicant</h2>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('hr.recruitment.applicants.index') }}">Applicants</a></li>
+                    <li class="breadcrumb-item active">Add New</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-file-alt me-2"></i>Applicant Information</h5>
+                </div>
+                <div class="card-body">
+                    <form action="{{ route('hr.recruitment.applicants.store') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        
+                        <!-- Basic Information -->
+                        <h6 class="mb-3 text-primary"><i class="fas fa-user me-2"></i>Personal Details</h6>
+                        
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="application_code" class="form-label">Application Code</label>
+                                <input type="text" class="form-control" id="application_code" 
+                                       name="application_code" value="{{ $appCode }}" readonly>
+                            </div>
+                            
+                            <div class="col-md-4 mb-3">
+                                <label for="first_name" class="form-label">First Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control @error('first_name') is-invalid @enderror" 
+                                       id="first_name" name="first_name" value="{{ old('first_name') }}" required>
+                                @error('first_name')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            
+                            <div class="col-md-4 mb-3">
+                                <label for="last_name" class="form-label">Last Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control @error('last_name') is-invalid @enderror" 
+                                       id="last_name" name="last_name" value="{{ old('last_name') }}" required>
+                                @error('last_name')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">Email Address <span class="text-danger">*</span></label>
+                                <input type="email" class="form-control @error('email') is-invalid @enderror" 
+                                       id="email" name="email" value="{{ old('email') }}" required>
+                                @error('email')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="phone" class="form-label">Phone Number <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control @error('phone') is-invalid @enderror" 
+                                       id="phone" name="phone" value="{{ old('phone') }}" required>
+                                @error('phone')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="address" class="form-label">Address</label>
+                            <textarea class="form-control @error('address') is-invalid @enderror" 
+                                      id="address" name="address" rows="2">{{ old('address') }}</textarea>
+                            @error('address')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <hr class="my-4">
+
+                        <!-- Job Application Details -->
+                        <h6 class="mb-3 text-primary"><i class="fas fa-briefcase me-2"></i>Job Application</h6>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="job_posting_id" class="form-label">Position Applied <span class="text-danger">*</span></label>
+                                <select class="form-select @error('job_posting_id') is-invalid @enderror" 
+                                        id="job_posting_id" name="job_posting_id" required>
+                                    <option value="">Select Position</option>
+                                    @foreach($jobPostings as $job)
+                                        <option value="{{ $job->id }}" {{ old('job_posting_id') == $job->id ? 'selected' : '' }}>
+                                            {{ $job->title }} - {{ $job->department->name ?? '' }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('job_posting_id')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="source" class="form-label">Application Source</label>
+                                <select class="form-select @error('source') is-invalid @enderror" id="source" name="source">
+                                    <option value="">Select Source</option>
+                                    <option value="Website" {{ old('source') == 'Website' ? 'selected' : '' }}>Website</option>
+                                    <option value="Job Board" {{ old('source') == 'Job Board' ? 'selected' : '' }}>Job Board</option>
+                                    <option value="LinkedIn" {{ old('source') == 'LinkedIn' ? 'selected' : '' }}>LinkedIn</option>
+                                    <option value="Referral" {{ old('source') == 'Referral' ? 'selected' : '' }}>Referral</option>
+                                    <option value="Career Fair" {{ old('source') == 'Career Fair' ? 'selected' : '' }}>Career Fair</option>
+                                    <option value="Direct" {{ old('source') == 'Direct' ? 'selected' : '' }}>Direct Application</option>
+                                    <option value="Other" {{ old('source') == 'Other' ? 'selected' : '' }}>Other</option>
+                                </select>
+                                @error('source')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="experience_years" class="form-label">Years of Experience</label>
+                                <input type="number" class="form-control @error('experience_years') is-invalid @enderror" 
+                                       id="experience_years" name="experience_years" value="{{ old('experience_years', 0) }}" 
+                                       min="0" max="50" step="0.5">
+                                @error('experience_years')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="expected_salary" class="form-label">Expected Salary</label>
+                                <input type="number" class="form-control @error('expected_salary') is-invalid @enderror" 
+                                       id="expected_salary" name="expected_salary" value="{{ old('expected_salary') }}" 
+                                       min="0" step="1000">
+                                @error('expected_salary')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="education" class="form-label">Highest Education</label>
+                            <input type="text" class="form-control @error('education') is-invalid @enderror" 
+                                   id="education" name="education" value="{{ old('education') }}" 
+                                   placeholder="e.g., Bachelor's in Computer Science">
+                            @error('education')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="skills" class="form-label">Skills</label>
+                            <textarea class="form-control @error('skills') is-invalid @enderror" 
+                                      id="skills" name="skills" rows="2" 
+                                      placeholder="e.g., PHP, Laravel, MySQL, JavaScript">{{ old('skills') }}</textarea>
+                            @error('skills')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                            <small class="text-muted">Separate multiple skills with commas</small>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <!-- Documents -->
+                        <h6 class="mb-3 text-primary"><i class="fas fa-file-upload me-2"></i>Documents</h6>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="resume" class="form-label">Resume/CV</label>
+                                <input type="file" class="form-control @error('resume') is-invalid @enderror" 
+                                       id="resume" name="resume" accept=".pdf,.doc,.docx">
+                                @error('resume')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                                <small class="text-muted">Accepted formats: PDF, DOC, DOCX (Max 5MB)</small>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="cover_letter" class="form-label">Cover Letter</label>
+                                <input type="file" class="form-control @error('cover_letter') is-invalid @enderror" 
+                                       id="cover_letter" name="cover_letter" accept=".pdf,.doc,.docx">
+                                @error('cover_letter')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                                <small class="text-muted">Optional (PDF, DOC, DOCX - Max 5MB)</small>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="linkedin_url" class="form-label">LinkedIn Profile URL</label>
+                            <input type="url" class="form-control @error('linkedin_url') is-invalid @enderror" 
+                                   id="linkedin_url" name="linkedin_url" value="{{ old('linkedin_url') }}" 
+                                   placeholder="https://www.linkedin.com/in/...">
+                            @error('linkedin_url')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="portfolio_url" class="form-label">Portfolio/Website URL</label>
+                            <input type="url" class="form-control @error('portfolio_url') is-invalid @enderror" 
+                                   id="portfolio_url" name="portfolio_url" value="{{ old('portfolio_url') }}" 
+                                   placeholder="https://...">
+                            @error('portfolio_url')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <hr class="my-4">
+
+                        <!-- Additional Notes -->
+                        <div class="mb-3">
+                            <label for="notes" class="form-label">Additional Notes</label>
+                            <textarea class="form-control @error('notes') is-invalid @enderror" 
+                                      id="notes" name="notes" rows="3">{{ old('notes') }}</textarea>
+                            @error('notes')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="status" class="form-label">Status</label>
+                            <select class="form-select @error('status') is-invalid @enderror" id="status" name="status">
+                                <option value="New" {{ old('status', 'New') == 'New' ? 'selected' : '' }}>New</option>
+                                <option value="Screening" {{ old('status') == 'Screening' ? 'selected' : '' }}>Screening</option>
+                                <option value="Interview" {{ old('status') == 'Interview' ? 'selected' : '' }}>Interview</option>
+                                <option value="Assessment" {{ old('status') == 'Assessment' ? 'selected' : '' }}>Assessment</option>
+                            </select>
+                            @error('status')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{{ route('hr.recruitment.applicants.index') }}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Save Applicant
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection

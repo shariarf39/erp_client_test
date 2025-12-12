@@ -48,7 +48,7 @@ class OnboardingChecklistController extends Controller
     public function create()
     {
         $departments = Department::where('is_active', true)->orderBy('name')->get();
-        $designations = Designation::orderBy('name')->get();
+        $designations = Designation::orderBy('title')->get();
 
         return view('hr.onboarding.checklists.create', compact('departments', 'designations'));
     }
@@ -119,7 +119,7 @@ class OnboardingChecklistController extends Controller
         }]);
         
         $departments = Department::where('is_active', true)->orderBy('name')->get();
-        $designations = Designation::orderBy('name')->get();
+        $designations = Designation::orderBy('title')->get();
 
         return view('hr.onboarding.checklists.edit', compact('checklist', 'departments', 'designations'));
     }

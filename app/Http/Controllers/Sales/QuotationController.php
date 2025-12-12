@@ -51,8 +51,8 @@ class QuotationController extends Controller
      */
     public function create()
     {
-        $customers = Customer::where('status', 'Active')->orderBy('name')->get();
-        $items = Item::where('is_active', 1)->orderBy('name')->get();
+        $customers = Customer::where('is_active', 1)->orderBy('customer_name')->get();
+        $items = Item::where('is_active', 1)->orderBy('item_name')->get();
         
         // Generate quotation number
         $lastQuotation = Quotation::latest('id')->first();
@@ -99,8 +99,8 @@ class QuotationController extends Controller
     public function edit(string $id)
     {
         $quotation = Quotation::findOrFail($id);
-        $customers = Customer::where('status', 'Active')->orderBy('name')->get();
-        $items = Item::where('is_active', 1)->orderBy('name')->get();
+        $customers = Customer::where('is_active', 1)->orderBy('customer_name')->get();
+        $items = Item::where('is_active', 1)->orderBy('item_name')->get();
         
         return view('sales.quotations.edit', compact('quotation', 'customers', 'items'));
     }

@@ -24,12 +24,43 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f8f9fa;
+            overflow-x: hidden;
         }
         
         .sidebar {
-            min-height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 250px;
             background: linear-gradient(180deg, var(--primary-color) 0%, #34495e 100%);
             box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            overflow-y: auto;
+            overflow-x: hidden;
+            z-index: 1000;
+        }
+        
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .sidebar::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.1);
+        }
+        
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.3);
+            border-radius: 3px;
+        }
+        
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.5);
+        }
+        
+        .main-content {
+            margin-left: 250px;
+            padding: 0;
+            min-height: 100vh;
         }
         
         .sidebar .nav-link {
@@ -148,23 +179,80 @@
             padding: 8px 20px;
             font-size: 0.9rem;
         }
+        
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.show {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .mobile-menu-toggle {
+                display: block !important;
+                position: fixed;
+                top: 15px;
+                left: 15px;
+                z-index: 1001;
+                background: var(--primary-color);
+                color: white;
+                border: none;
+                padding: 10px 15px;
+                border-radius: 8px;
+                cursor: pointer;
+            }
+        }
+        
+        .mobile-menu-toggle {
+            display: none;
+        }
+        
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar-overlay.show {
+                display: block;
+            }
+        }
     </style>
     @stack('styles')
 </head>
 <body>
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Sidebar -->
-            <div class="col-md-2 col-lg-2 px-0 sidebar">
-                <div class="p-3 text-center">
-                    <h4 class="text-white mb-0"><i class="fas fa-building"></i> SENA.ERP</h4>
-                    <small class="text-white-50">v1.0.0</small>
-                </div>
-                <hr class="text-white">
-                <nav class="nav flex-column px-2">
-                    <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">
-                        <i class="fas fa-home"></i> Dashboard
-                    </a>
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" id="mobileMenuToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+    
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="p-3 text-center">
+            <h4 class="text-white mb-0"><i class="fas fa-building"></i> SENA.ERP</h4>
+            <small class="text-white-50">v1.0.0</small>
+        </div>
+        <hr class="text-white">
+        <nav class="nav flex-column px-2">
+            <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">
+                <i class="fas fa-home"></i> Dashboard
+            </a>
                     
                     <!-- HR Management Dropdown -->
                     <div class="nav-dropdown {{ request()->routeIs('hr.*') ? 'show' : '' }}">
@@ -385,7 +473,7 @@
             </div>
 
             <!-- Main Content -->
-            <div class="col-md-10 col-lg-10">
+            <div class="main-content">
                 <!-- Header -->
                 <div class="main-header d-flex justify-content-between align-items-center">
                     <div>
@@ -405,8 +493,8 @@
                                 <i class="fas fa-user-circle fa-2x text-primary"></i>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i> Profile</a></li>
-                                <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i> Settings</a></li>
+                                <li><a class="dropdown-item" href="{{ route('profile.index') }}"><i class="fas fa-user me-2"></i> Profile</a></li>
+                                <li><a class="dropdown-item" href="{{ route('settings.index') }}"><i class="fas fa-cog me-2"></i> Settings</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
                                     <form action="{{ route('logout') }}" method="POST">
@@ -461,6 +549,23 @@
                     parent.classList.toggle('show');
                 });
             });
+            
+            // Mobile menu toggle
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            
+            if (mobileMenuToggle) {
+                mobileMenuToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('show');
+                    sidebarOverlay.classList.toggle('show');
+                });
+                
+                sidebarOverlay.addEventListener('click', function() {
+                    sidebar.classList.remove('show');
+                    sidebarOverlay.classList.remove('show');
+                });
+            }
         });
     </script>
     

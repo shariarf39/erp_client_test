@@ -51,7 +51,7 @@ class InvoiceController extends Controller
      */
     public function create()
     {
-        $customers = Customer::where('status', 'Active')->orderBy('name')->get();
+        $customers = Customer::where('is_active', 1)->orderBy('customer_name')->get();
         $salesOrders = SalesOrder::where('status', 'Approved')->orderBy('so_no')->get();
         
         // Generate invoice number
@@ -96,7 +96,7 @@ class InvoiceController extends Controller
     public function edit(string $id)
     {
         $invoice = SalesInvoice::findOrFail($id);
-        $customers = Customer::where('status', 'Active')->orderBy('name')->get();
+        $customers = Customer::where('is_active', 1)->orderBy('customer_name')->get();
         $salesOrders = SalesOrder::where('status', 'Approved')->orderBy('so_no')->get();
         
         return view('sales.invoices.edit', compact('invoice', 'customers', 'salesOrders'));
