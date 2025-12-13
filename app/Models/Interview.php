@@ -27,7 +27,6 @@ class Interview extends Model
     
     protected $casts = [
         'scheduled_date' => 'date',
-        'scheduled_time' => 'datetime',
         'duration' => 'integer',
         'rating' => 'decimal:2',
     ];

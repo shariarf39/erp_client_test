@@ -21,7 +21,8 @@ class PerformanceKpiController extends Controller
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
-                $q->where('kpi_name', 'like', "%{$search}%")
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('code', 'like', "%{$search}%")
                   ->orWhere('description', 'like', "%{$search}%");
             });
         }
@@ -41,7 +42,7 @@ class PerformanceKpiController extends Controller
             $query->where('is_active', $request->is_active);
         }
 
-        $kpis = $query->orderBy('category')->orderBy('kpi_name')->paginate(15);
+        $kpis = $query->orderBy('category')->orderBy('name')->paginate(15);
 
         return view('hr.performance.kpis.index', compact('kpis'));
     }
@@ -63,11 +64,12 @@ class PerformanceKpiController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'kpi_name' => 'required|string|max:100',
+            'name' => 'required|string|max:200',
+            'code' => 'required|string|max:50|unique:performance_kpis,code',
             'description' => 'nullable|string',
-            'category' => 'required|in:Productivity,Quality,Efficiency,Customer Satisfaction,Financial,Innovation,Teamwork,Leadership',
-            'measurement_type' => 'required|in:Quantitative,Qualitative,Both',
-            'unit_of_measure' => 'nullable|string|max:50',
+            'category' => 'required|in:Quality,Productivity,Efficiency,Customer Satisfaction,Innovation,Leadership,Teamwork,Other',
+            'measurement_type' => 'required|in:Percentage,Number,Rating,Yes/No',
+            'unit' => 'nullable|string|max:50',
             'target_value' => 'nullable|numeric',
             'department_id' => 'nullable|exists:departments,id',
             'designation_id' => 'nullable|exists:designations,id',
@@ -108,11 +110,12 @@ class PerformanceKpiController extends Controller
     public function update(Request $request, PerformanceKpi $kpi)
     {
         $validated = $request->validate([
-            'kpi_name' => 'required|string|max:100',
+            'name' => 'required|string|max:200',
+            'code' => 'required|string|max:50|unique:performance_kpis,code,' . $kpi->id,
             'description' => 'nullable|string',
-            'category' => 'required|in:Productivity,Quality,Efficiency,Customer Satisfaction,Financial,Innovation,Teamwork,Leadership',
-            'measurement_type' => 'required|in:Quantitative,Qualitative,Both',
-            'unit_of_measure' => 'nullable|string|max:50',
+            'category' => 'required|in:Quality,Productivity,Efficiency,Customer Satisfaction,Innovation,Leadership,Teamwork,Other',
+            'measurement_type' => 'required|in:Percentage,Number,Rating,Yes/No',
+            'unit' => 'nullable|string|max:50',
             'target_value' => 'nullable|numeric',
             'department_id' => 'nullable|exists:departments,id',
             'designation_id' => 'nullable|exists:designations,id',

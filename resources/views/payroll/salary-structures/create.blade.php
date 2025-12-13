@@ -43,9 +43,9 @@
                                     <option value="">Select Employee</option>
                                     @foreach($employees as $employee)
                                         <option value="{{ $employee->id }}" {{ old('employee_id') == $employee->id ? 'selected' : '' }}
-                                            data-department="{{ $employee->department->department_name ?? 'N/A' }}"
-                                            data-designation="{{ $employee->designation->designation_name ?? 'N/A' }}">
-                                            {{ $employee->employee_code }} - {{ $employee->employee_name }}
+                                            data-department="{{ $employee->department->name ?? 'N/A' }}"
+                                            data-designation="{{ $employee->designation->title ?? 'N/A' }}">
+                                            {{ $employee->employee_code }} - {{ $employee->first_name }} {{ $employee->last_name }}
                                         </option>
                                     @endforeach
                                 </select>

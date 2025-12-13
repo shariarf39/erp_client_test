@@ -59,17 +59,17 @@
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
-                            <label for="enrollment_status" class="form-label">Status <span class="text-danger">*</span></label>
-                            <select class="form-select @error('enrollment_status') is-invalid @enderror" 
-                                    id="enrollment_status" name="enrollment_status" required>
-                                <option value="Enrolled" {{ old('enrollment_status', $enrollment->enrollment_status) == 'Enrolled' ? 'selected' : '' }}>Enrolled</option>
-                                <option value="Waitlisted" {{ old('enrollment_status', $enrollment->enrollment_status) == 'Waitlisted' ? 'selected' : '' }}>Waitlisted</option>
-                                <option value="Approved" {{ old('enrollment_status', $enrollment->enrollment_status) == 'Approved' ? 'selected' : '' }}>Approved</option>
-                                <option value="Rejected" {{ old('enrollment_status', $enrollment->enrollment_status) == 'Rejected' ? 'selected' : '' }}>Rejected</option>
-                                <option value="Completed" {{ old('enrollment_status', $enrollment->enrollment_status) == 'Completed' ? 'selected' : '' }}>Completed</option>
-                                <option value="Cancelled" {{ old('enrollment_status', $enrollment->enrollment_status) == 'Cancelled' ? 'selected' : '' }}>Cancelled</option>
+                            <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
+                            <select class="form-select @error('status') is-invalid @enderror" 
+                                    id="status" name="status" required>
+                                <option value="Enrolled" {{ old('status', $enrollment->status) == 'Enrolled' ? 'selected' : '' }}>Enrolled</option>
+                                <option value="Attended" {{ old('status', $enrollment->status) == 'Attended' ? 'selected' : '' }}>Attended</option>
+                                <option value="Completed" {{ old('status', $enrollment->status) == 'Completed' ? 'selected' : '' }}>Completed</option>
+                                <option value="Cancelled" {{ old('status', $enrollment->status) == 'Cancelled' ? 'selected' : '' }}>Cancelled</option>
+                                <option value="Failed" {{ old('status', $enrollment->status) == 'Failed' ? 'selected' : '' }}>Failed</option>
+                                <option value="Absent" {{ old('status', $enrollment->status) == 'Absent' ? 'selected' : '' }}>Absent</option>
                             </select>
-                            @error('enrollment_status')
+                            @error('status')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>

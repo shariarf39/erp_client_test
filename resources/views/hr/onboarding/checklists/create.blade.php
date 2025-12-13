@@ -144,11 +144,11 @@
                                                     <option value="">Select Category</option>
                                                     <option value="Documentation" {{ ($task['category'] ?? '') == 'Documentation' ? 'selected' : '' }}>Documentation</option>
                                                     <option value="IT Setup" {{ ($task['category'] ?? '') == 'IT Setup' ? 'selected' : '' }}>IT Setup</option>
-                                                    <option value="Access & Permissions" {{ ($task['category'] ?? '') == 'Access & Permissions' ? 'selected' : '' }}>Access & Permissions</option>
+                                                    <option value="Access Rights" {{ ($task['category'] ?? '') == 'Access Rights' ? 'selected' : '' }}>Access Rights</option>
                                                     <option value="Training" {{ ($task['category'] ?? '') == 'Training' ? 'selected' : '' }}>Training</option>
                                                     <option value="Introduction" {{ ($task['category'] ?? '') == 'Introduction' ? 'selected' : '' }}>Introduction</option>
-                                                    <option value="Equipment" {{ ($task['category'] ?? '') == 'Equipment' ? 'selected' : '' }}>Equipment</option>
-                                                    <option value="Administrative" {{ ($task['category'] ?? '') == 'Administrative' ? 'selected' : '' }}>Administrative</option>
+                                                    <option value="Compliance">Compliance</option>
+                                                    
                                                     <option value="Other" {{ ($task['category'] ?? '') == 'Other' ? 'selected' : '' }}>Other</option>
                                                 </select>
                                                 @error("tasks.{$index}.category")
@@ -199,11 +199,11 @@
                                                 <option value="">Select Category</option>
                                                 <option value="Documentation">Documentation</option>
                                                 <option value="IT Setup">IT Setup</option>
-                                                <option value="Access & Permissions">Access & Permissions</option>
+                                                <option value="Access Rights">Access Rights</option>
                                                 <option value="Training">Training</option>
                                                 <option value="Introduction">Introduction</option>
-                                                <option value="Equipment">Equipment</option>
-                                                <option value="Administrative">Administrative</option>
+                                                <option value="Compliance">Compliance</option>
+                                                
                                                 <option value="Other">Other</option>
                                             </select>
                                         </div>
@@ -274,7 +274,7 @@
                     <ul class="list-unstyled small mb-0">
                         <li class="mb-1"><strong>Documentation:</strong> Forms, contracts, policies</li>
                         <li class="mb-1"><strong>IT Setup:</strong> Computer, email, software</li>
-                        <li class="mb-1"><strong>Access & Permissions:</strong> System access, badges</li>
+                        <li class="mb-1"><strong>Access Rights:</strong> System access, badges</li>
                         <li class="mb-1"><strong>Training:</strong> Orientation, skill training</li>
                         <li class="mb-1"><strong>Introduction:</strong> Team meetings, introductions</li>
                         <li class="mb-1"><strong>Equipment:</strong> Office supplies, tools</li>
@@ -322,11 +322,11 @@ document.getElementById('addTaskBtn').addEventListener('click', function() {
                         <option value="">Select Category</option>
                         <option value="Documentation">Documentation</option>
                         <option value="IT Setup">IT Setup</option>
-                        <option value="Access & Permissions">Access & Permissions</option>
+                        <option value="Access Rights">Access Rights</option>
                         <option value="Training">Training</option>
                         <option value="Introduction">Introduction</option>
-                        <option value="Equipment">Equipment</option>
-                        <option value="Administrative">Administrative</option>
+                        <option value="Compliance">Compliance</option>
+                        
                         <option value="Other">Other</option>
                     </select>
                 </div>
@@ -362,3 +362,4 @@ document.getElementById('tasksContainer').addEventListener('click', function(e) 
 </script>
 @endpush
 @endsection
+

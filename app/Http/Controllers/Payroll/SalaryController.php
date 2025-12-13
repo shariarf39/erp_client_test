@@ -20,7 +20,8 @@ class SalaryController extends Controller
         if ($request->filled('search')) {
             $search = $request->search;
             $query->whereHas('employee', function($q) use ($search) {
-                $q->where('employee_name', 'like', "%{$search}%")
+                $q->where('first_name', 'like', "%{$search}%")
+                  ->orWhere('last_name', 'like', "%{$search}%")
                   ->orWhere('employee_code', 'like', "%{$search}%");
             });
         }
@@ -55,38 +56,121 @@ class SalaryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'employee_id' => 'required|exists:employees,id',
+            'basic_salary' => 'required|numeric|min:0',
+            'house_rent' => 'nullable|numeric|min:0',
+            'medical_allowance' => 'nullable|numeric|min:0',
+            'transport_allowance' => 'nullable|numeric|min:0',
+            'food_allowance' => 'nullable|numeric|min:0',
+            'other_allowance' => 'nullable|numeric|min:0',
+            'provident_fund' => 'nullable|numeric|min:0',
+            'tax_deduction' => 'nullable|numeric|min:0',
+            'other_deduction' => 'nullable|numeric|min:0',
+            'effective_from' => 'required|date',
+            'effective_to' => 'nullable|date|after:effective_from',
+        ]);
+
+        // Calculate gross and net salary
+        $grossSalary = $validated['basic_salary'] +
+                      ($validated['house_rent'] ?? 0) +
+                      ($validated['medical_allowance'] ?? 0) +
+                      ($validated['transport_allowance'] ?? 0) +
+                      ($validated['food_allowance'] ?? 0) +
+                      ($validated['other_allowance'] ?? 0);
+
+        $netSalary = $grossSalary -
+                    ($validated['provident_fund'] ?? 0) -
+                    ($validated['tax_deduction'] ?? 0) -
+                    ($validated['other_deduction'] ?? 0);
+
+        $validated['gross_salary'] = $grossSalary;
+        $validated['net_salary'] = $netSalary;
+        $validated['created_by'] = auth()->id();
+        $validated['is_active'] = 1;
+
+        // Deactivate existing active salary structures for this employee
+        SalaryStructure::where('employee_id', $validated['employee_id'])
+                      ->where('is_active', 1)
+                      ->update(['is_active' => 0, 'effective_to' => now()]);
+
+        SalaryStructure::create($validated);
+
+        return redirect()->route('payroll.salary-structures.index')
+                        ->with('success', 'Salary structure created successfully.');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(SalaryStructure $salaryStructure)
     {
-        //
+        $salaryStructure->load(['employee.department', 'employee.designation']);
+        return view('payroll.salary-structures.show', compact('salaryStructure'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(SalaryStructure $salaryStructure)
     {
-        //
+        $employees = Employee::where('status', 'Active')
+            ->with(['department', 'designation'])
+            ->get();
+        
+        return view('payroll.salary-structures.edit', compact('salaryStructure', 'employees'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, SalaryStructure $salaryStructure)
     {
-        //
+        $validated = $request->validate([
+            'basic_salary' => 'required|numeric|min:0',
+            'house_rent' => 'nullable|numeric|min:0',
+            'medical_allowance' => 'nullable|numeric|min:0',
+            'transport_allowance' => 'nullable|numeric|min:0',
+            'food_allowance' => 'nullable|numeric|min:0',
+            'other_allowance' => 'nullable|numeric|min:0',
+            'provident_fund' => 'nullable|numeric|min:0',
+            'tax_deduction' => 'nullable|numeric|min:0',
+            'other_deduction' => 'nullable|numeric|min:0',
+            'effective_from' => 'required|date',
+            'effective_to' => 'nullable|date|after:effective_from',
+            'is_active' => 'boolean',
+        ]);
+
+        // Calculate gross and net salary
+        $grossSalary = $validated['basic_salary'] +
+                      ($validated['house_rent'] ?? 0) +
+                      ($validated['medical_allowance'] ?? 0) +
+                      ($validated['transport_allowance'] ?? 0) +
+                      ($validated['food_allowance'] ?? 0) +
+                      ($validated['other_allowance'] ?? 0);
+
+        $netSalary = $grossSalary -
+                    ($validated['provident_fund'] ?? 0) -
+                    ($validated['tax_deduction'] ?? 0) -
+                    ($validated['other_deduction'] ?? 0);
+
+        $validated['gross_salary'] = $grossSalary;
+        $validated['net_salary'] = $netSalary;
+
+        $salaryStructure->update($validated);
+
+        return redirect()->route('payroll.salary-structures.index')
+                        ->with('success', 'Salary structure updated successfully.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(SalaryStructure $salaryStructure)
     {
-        //
+        $salaryStructure->delete();
+
+        return redirect()->route('payroll.salary-structures.index')
+                        ->with('success', 'Salary structure deleted successfully.');
     }
 }

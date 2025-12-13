@@ -27,6 +27,9 @@
                     <form action="{{ route('hr.recruitment.interviews.store') }}" method="POST">
                         @csrf
                         
+                        <!-- Hidden status field -->
+                        <input type="hidden" name="status" value="Scheduled">
+                        
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="applicant_id" class="form-label">Applicant <span class="text-danger">*</span></label>
@@ -50,12 +53,12 @@
                                 <select class="form-select @error('interview_type') is-invalid @enderror" 
                                         id="interview_type" name="interview_type" required>
                                     <option value="">Select Type</option>
-                                    <option value="Phone Screening" {{ old('interview_type') == 'Phone Screening' ? 'selected' : '' }}>Phone Screening</option>
-                                    <option value="HR Interview" {{ old('interview_type') == 'HR Interview' ? 'selected' : '' }}>HR Interview</option>
-                                    <option value="Technical Interview" {{ old('interview_type') == 'Technical Interview' ? 'selected' : '' }}>Technical Interview</option>
-                                    <option value="Manager Interview" {{ old('interview_type') == 'Manager Interview' ? 'selected' : '' }}>Manager Interview</option>
-                                    <option value="Panel Interview" {{ old('interview_type') == 'Panel Interview' ? 'selected' : '' }}>Panel Interview</option>
-                                    <option value="Final Interview" {{ old('interview_type') == 'Final Interview' ? 'selected' : '' }}>Final Interview</option>
+                                    <option value="Phone" {{ old('interview_type') == 'Phone' ? 'selected' : '' }}>Phone</option>
+                                    <option value="Video" {{ old('interview_type') == 'Video' ? 'selected' : '' }}>Video</option>
+                                    <option value="In-Person" {{ old('interview_type') == 'In-Person' ? 'selected' : '' }}>In-Person</option>
+                                    <option value="Technical" {{ old('interview_type') == 'Technical' ? 'selected' : '' }}>Technical</option>
+                                    <option value="HR" {{ old('interview_type') == 'HR' ? 'selected' : '' }}>HR</option>
+                                    <option value="Final" {{ old('interview_type') == 'Final' ? 'selected' : '' }}>Final</option>
                                 </select>
                                 @error('interview_type')
                                     <div class="invalid-feedback">{{ $message }}</div>

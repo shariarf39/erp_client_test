@@ -143,14 +143,14 @@
                                             <i class="fas fa-user text-primary"></i>
                                         </div>
                                         <div>
-                                            <strong>{{ $structure->employee->employee_name ?? 'N/A' }}</strong>
+                                            <strong>{{ ($structure->employee->first_name ?? '') . ' ' . ($structure->employee->last_name ?? '') }}</strong>
                                             <br><small class="text-muted">{{ $structure->employee->employee_code ?? '' }}</small>
                                         </div>
                                     </div>
                                 </td>
                                 <td>
                                     <span class="badge bg-secondary">
-                                        {{ $structure->employee->department->department_name ?? 'N/A' }}
+                                        {{ $structure->employee->department->name ?? 'N/A' }}
                                     </span>
                                 </td>
                                 <td><strong>৳{{ number_format($structure->basic_salary, 2) }}</strong></td>

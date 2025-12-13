@@ -67,7 +67,7 @@ class OnboardingChecklistController extends Controller
             'tasks' => 'required|array|min:1',
             'tasks.*.task_name' => 'required|string|max:200',
             'tasks.*.description' => 'nullable|string',
-            'tasks.*.category' => 'required|in:Documentation,IT Setup,Access & Permissions,Training,Introduction,Equipment,Administrative,Other',
+            'tasks.*.category' => 'required|in:Documentation,IT Setup,Access Rights,Training,Introduction,Compliance,Other',
             'tasks.*.is_mandatory' => 'boolean',
             'tasks.*.sequence_order' => 'required|integer|min:1',
         ]);
@@ -138,7 +138,7 @@ class OnboardingChecklistController extends Controller
             'tasks' => 'required|array|min:1',
             'tasks.*.task_name' => 'required|string|max:200',
             'tasks.*.description' => 'nullable|string',
-            'tasks.*.category' => 'required|in:Documentation,IT Setup,Access & Permissions,Training,Introduction,Equipment,Administrative,Other',
+            'tasks.*.category' => 'required|in:Documentation,IT Setup,Access Rights,Training,Introduction,Compliance,Other',
             'tasks.*.is_mandatory' => 'boolean',
             'tasks.*.sequence_order' => 'required|integer|min:1',
         ]);

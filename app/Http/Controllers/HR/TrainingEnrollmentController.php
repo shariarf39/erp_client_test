@@ -70,15 +70,14 @@ class TrainingEnrollmentController extends Controller
             'training_program_id' => 'required|exists:training_programs,id',
             'employee_id' => 'required|exists:employees,id',
             'enrollment_date' => 'required|date',
-            'enrollment_status' => 'required|in:Enrolled,Waitlisted,Approved,Rejected,Completed,Cancelled',
-            'is_mandatory' => 'boolean',
+            'status' => 'required|in:Enrolled,Attended,Completed,Cancelled,Failed,Absent',
             'notes' => 'nullable|string',
         ]);
 
         // Check if employee is already enrolled
         $exists = TrainingEnrollment::where('training_program_id', $validated['training_program_id'])
                                     ->where('employee_id', $validated['employee_id'])
-                                    ->whereIn('enrollment_status', ['Enrolled', 'Approved', 'Completed'])
+                                    ->whereIn('status', ['Enrolled', 'Attended', 'Completed'])
                                     ->exists();
 
         if ($exists) {
@@ -120,21 +119,21 @@ class TrainingEnrollmentController extends Controller
     public function update(Request $request, TrainingEnrollment $enrollment)
     {
         $validated = $request->validate([
-            'enrollment_status' => 'required|in:Enrolled,Waitlisted,Approved,Rejected,Completed,Cancelled',
+            'status' => 'required|in:Enrolled,Attended,Completed,Cancelled,Failed,Absent',
             'attendance_percentage' => 'nullable|numeric|min:0|max:100',
             'assessment_score' => 'nullable|numeric|min:0|max:100',
-            'passed' => 'nullable|boolean',
             'certificate_issued' => 'nullable|boolean',
             'certificate_number' => 'nullable|string|max:100',
+            'certificate_date' => 'nullable|date',
             'completion_date' => 'nullable|date',
-            'feedback' => 'nullable|string',
-            'notes' => 'nullable|string',
+            'feedback_rating' => 'nullable|numeric|min:1|max:5',
+            'feedback_comments' => 'nullable|string',
+            'cost_incurred' => 'nullable|numeric|min:0',
         ]);
 
-        // Auto-approve or set approved_by
-        if ($request->enrollment_status == 'Approved' && !$enrollment->approved_by) {
+        // Set approved_by when status changes to Completed
+        if ($request->status == 'Completed' && !$enrollment->approved_by) {
             $validated['approved_by'] = auth()->id();
-            $validated['approved_date'] = now();
         }
 
         $enrollment->update($validated);
@@ -149,7 +148,7 @@ class TrainingEnrollmentController extends Controller
     public function destroy(TrainingEnrollment $enrollment)
     {
         // Only allow deletion if not completed
-        if ($enrollment->enrollment_status == 'Completed') {
+        if ($enrollment->status == 'Completed') {
             return redirect()->route('hr.training.enrollments.index')
                             ->with('error', 'Cannot delete completed enrollments.');
         }

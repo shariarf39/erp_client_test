@@ -52,7 +52,8 @@ class InterviewController extends Controller
      */
     public function create()
     {
-        $applicants = Applicant::whereIn('status', ['Screening', 'Interview', 'Assessment'])
+        $applicants = Applicant::with('jobPosting')
+                                ->whereNotIn('status', ['Rejected', 'Hired', 'Withdrawn'])
                                 ->orderBy('first_name')
                                 ->get();
         $interviewers = User::where('is_active', 1)
@@ -69,16 +70,21 @@ class InterviewController extends Controller
     {
         $validated = $request->validate([
             'applicant_id' => 'required|exists:applicants,id',
-            'interview_type' => 'required|in:Phone Screening,HR Interview,Technical Interview,Manager Interview,Panel Interview,Final Interview',
+            'interview_type' => 'required|in:Phone,Video,In-Person,Technical,HR,Final',
             'scheduled_date' => 'required|date',
             'scheduled_time' => 'required',
             'duration' => 'required|integer|min:15',
-            'location' => 'nullable|string|max:200',
-            'meeting_link' => 'nullable|url|max:500',
+            'location' => 'nullable|string|max:255',
+            'meeting_link' => 'nullable|url|max:255',
             'interviewer_id' => 'required|exists:users,id',
-            'status' => 'required|in:Scheduled,Completed,Cancelled,Rescheduled,No Show',
+            'status' => 'nullable|in:Scheduled,Completed,Cancelled,No Show,Rescheduled',
             'notes' => 'nullable|string',
         ]);
+
+        // Set default status if not provided
+        if (!isset($validated['status'])) {
+            $validated['status'] = 'Scheduled';
+        }
 
         $interview = Interview::create($validated);
 
@@ -107,7 +113,8 @@ class InterviewController extends Controller
      */
     public function edit(Interview $interview)
     {
-        $applicants = Applicant::whereIn('status', ['Screening', 'Interview', 'Assessment'])
+        $applicants = Applicant::with('jobPosting')
+                                ->whereNotIn('status', ['Rejected', 'Hired', 'Withdrawn'])
                                 ->orderBy('first_name')
                                 ->get();
         $interviewers = User::where('is_active', true)
@@ -124,17 +131,17 @@ class InterviewController extends Controller
     {
         $validated = $request->validate([
             'applicant_id' => 'required|exists:applicants,id',
-            'interview_type' => 'required|in:Phone Screening,HR Interview,Technical Interview,Manager Interview,Panel Interview,Final Interview',
+            'interview_type' => 'required|in:Phone,Video,In-Person,Technical,HR,Final',
             'scheduled_date' => 'required|date',
             'scheduled_time' => 'required',
             'duration' => 'required|integer|min:15',
-            'location' => 'nullable|string|max:200',
-            'meeting_link' => 'nullable|url|max:500',
+            'location' => 'nullable|string|max:255',
+            'meeting_link' => 'nullable|url|max:255',
             'interviewer_id' => 'required|exists:users,id',
-            'status' => 'required|in:Scheduled,Completed,Cancelled,Rescheduled,No Show',
+            'status' => 'required|in:Scheduled,Completed,Cancelled,No Show,Rescheduled',
             'feedback' => 'nullable|string',
             'rating' => 'nullable|numeric|min:1|max:5',
-            'result' => 'nullable|string|max:100',
+            'result' => 'nullable|in:Passed,Failed,On Hold',
             'notes' => 'nullable|string',
         ]);
 

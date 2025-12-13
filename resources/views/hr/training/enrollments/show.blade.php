@@ -33,8 +33,8 @@
                                 'Cancelled' => 'secondary'
                             ];
                         @endphp
-                        <span class="badge bg-{{ $statusColors[$enrollment->enrollment_status] ?? 'secondary' }} fs-6">
-                            {{ $enrollment->enrollment_status }}
+                        <span class="badge bg-{{ $statusColors[$enrollment->status] ?? 'secondary' }} fs-6">
+                            {{ $enrollment->status }}
                         </span>
                     </div>
                 </div>
@@ -137,7 +137,7 @@
                 </div>
             </div>
 
-            @if($enrollment->enrollment_status == 'Completed' || $enrollment->attendance_percentage || $enrollment->assessment_score)
+            @if($enrollment->status == 'Completed' || $enrollment->attendance_percentage || $enrollment->assessment_score)
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-success text-white">
                     <h5 class="mb-0"><i class="fas fa-chart-line me-2"></i>Performance & Completion</h5>
@@ -238,7 +238,7 @@
                             <i class="fas fa-edit me-2"></i>Update Enrollment
                         </a>
                         
-                        @if($enrollment->enrollment_status != 'Completed')
+                        @if($enrollment->status != 'Completed')
                         <form action="{{ route('hr.training.enrollments.destroy', $enrollment->id) }}" method="POST" 
                               onsubmit="return confirm('Are you sure you want to delete this enrollment?');">
                             @csrf

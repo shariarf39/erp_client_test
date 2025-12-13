@@ -39,6 +39,16 @@
                         </div>
 
                         <div class="mb-3">
+                            <label for="code" class="form-label">KPI Code <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control @error('code') is-invalid @enderror" 
+                                   id="code" name="code" value="{{ old('code', $kpi->code) }}" required>
+                            <small class="text-muted">Unique code for this KPI (e.g., KPI-001)</small>
+                            @error('code')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
                             <label for="description" class="form-label">Description</label>
                             <textarea class="form-control @error('description') is-invalid @enderror" 
                                       id="description" name="description" rows="3">{{ old('description', $kpi->description) }}</textarea>
@@ -54,14 +64,14 @@
                                 <select class="form-select @error('category') is-invalid @enderror" 
                                         id="category" name="category" required>
                                     <option value="">Select Category</option>
-                                    <option value="Productivity" {{ old('category', $kpi->category) == 'Productivity' ? 'selected' : '' }}>Productivity</option>
                                     <option value="Quality" {{ old('category', $kpi->category) == 'Quality' ? 'selected' : '' }}>Quality</option>
+                                    <option value="Productivity" {{ old('category', $kpi->category) == 'Productivity' ? 'selected' : '' }}>Productivity</option>
                                     <option value="Efficiency" {{ old('category', $kpi->category) == 'Efficiency' ? 'selected' : '' }}>Efficiency</option>
                                     <option value="Customer Satisfaction" {{ old('category', $kpi->category) == 'Customer Satisfaction' ? 'selected' : '' }}>Customer Satisfaction</option>
-                                    <option value="Financial" {{ old('category', $kpi->category) == 'Financial' ? 'selected' : '' }}>Financial</option>
                                     <option value="Innovation" {{ old('category', $kpi->category) == 'Innovation' ? 'selected' : '' }}>Innovation</option>
-                                    <option value="Teamwork" {{ old('category', $kpi->category) == 'Teamwork' ? 'selected' : '' }}>Teamwork</option>
                                     <option value="Leadership" {{ old('category', $kpi->category) == 'Leadership' ? 'selected' : '' }}>Leadership</option>
+                                    <option value="Teamwork" {{ old('category', $kpi->category) == 'Teamwork' ? 'selected' : '' }}>Teamwork</option>
+                                    <option value="Other" {{ old('category', $kpi->category) == 'Other' ? 'selected' : '' }}>Other</option>
                                 </select>
                                 @error('category')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -72,9 +82,10 @@
                                 <select class="form-select @error('measurement_type') is-invalid @enderror" 
                                         id="measurement_type" name="measurement_type" required>
                                     <option value="">Select Type</option>
-                                    <option value="Quantitative" {{ old('measurement_type', $kpi->measurement_type) == 'Quantitative' ? 'selected' : '' }}>Quantitative</option>
-                                    <option value="Qualitative" {{ old('measurement_type', $kpi->measurement_type) == 'Qualitative' ? 'selected' : '' }}>Qualitative</option>
-                                    <option value="Both" {{ old('measurement_type', $kpi->measurement_type) == 'Both' ? 'selected' : '' }}>Both</option>
+                                    <option value="Percentage" {{ old('measurement_type', $kpi->measurement_type) == 'Percentage' ? 'selected' : '' }}>Percentage</option>
+                                    <option value="Number" {{ old('measurement_type', $kpi->measurement_type) == 'Number' ? 'selected' : '' }}>Number</option>
+                                    <option value="Rating" {{ old('measurement_type', $kpi->measurement_type) == 'Rating' ? 'selected' : '' }}>Rating</option>
+                                    <option value="Yes/No" {{ old('measurement_type', $kpi->measurement_type) == 'Yes/No' ? 'selected' : '' }}>Yes/No</option>
                                 </select>
                                 @error('measurement_type')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -84,11 +95,11 @@
 
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="unit_of_measure" class="form-label">Unit of Measure</label>
-                                <input type="text" class="form-control @error('unit_of_measure') is-invalid @enderror" 
-                                       id="unit_of_measure" name="unit_of_measure" value="{{ old('unit_of_measure', $kpi->unit_of_measure) }}">
+                                <label for="unit" class="form-label">Unit of Measure</label>
+                                <input type="text" class="form-control @error('unit') is-invalid @enderror" 
+                                       id="unit" name="unit" value="{{ old('unit', $kpi->unit) }}">
                                 <small class="text-muted">e.g., %, units, hours, score</small>
-                                @error('unit_of_measure')
+                                @error('unit')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>

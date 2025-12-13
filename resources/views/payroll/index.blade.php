@@ -290,7 +290,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (confirm(`Are you sure you want to process payroll for ${getMonthName(month)} ${year}? This action cannot be easily undone.`)) {
             // Redirect to process route
-            window.location.href = `{{ route('payroll.payroll.index') }}/process/${month}/${year}`;
+            window.location.href = `/payroll/process/${month}/${year}`;
         }
     });
     
