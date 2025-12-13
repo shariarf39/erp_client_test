@@ -11,7 +11,7 @@
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
                     <li class="breadcrumb-item"><a href="{{ route('hr.recruitment.jobs.index') }}">Job Postings</a></li>
-                    <li class="breadcrumb-item active">{{ $jobPosting->title }}</li>
+                    <li class="breadcrumb-item active">{{ $job->title }}</li>
                 </ol>
             </nav>
         </div>
@@ -21,70 +21,70 @@
         <div class="col-lg-8">
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">{{ $jobPosting->title }}</h5>
-                    <span class="badge bg-light text-dark">{{ $jobPosting->status }}</span>
+                    <h5 class="mb-0">{{ $job->title }}</h5>
+                    <span class="badge bg-light text-dark">{{ $job->status }}</span>
                 </div>
                 <div class="card-body">
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <h6 class="text-muted">Job Code</h6>
-                            <p class="mb-0"><strong>{{ $jobPosting->job_code }}</strong></p>
+                            <p class="mb-0"><strong>{{ $job->job_code }}</strong></p>
                         </div>
                         <div class="col-md-6">
                             <h6 class="text-muted">Department</h6>
-                            <p class="mb-0">{{ $jobPosting->department->name ?? 'N/A' }}</p>
+                            <p class="mb-0">{{ $job->department->name ?? 'N/A' }}</p>
                         </div>
                     </div>
 
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <h6 class="text-muted">Employment Type</h6>
-                            <p class="mb-0"><span class="badge bg-info">{{ $jobPosting->employment_type }}</span></p>
+                            <p class="mb-0"><span class="badge bg-info">{{ $job->employment_type }}</span></p>
                         </div>
                         <div class="col-md-6">
                             <h6 class="text-muted">Location</h6>
-                            <p class="mb-0"><i class="fas fa-map-marker-alt me-2"></i>{{ $jobPosting->location }}</p>
+                            <p class="mb-0"><i class="fas fa-map-marker-alt me-2"></i>{{ $job->location }}</p>
                         </div>
                     </div>
 
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <h6 class="text-muted">Vacancies</h6>
-                            <p class="mb-0">{{ $jobPosting->vacancies }} positions</p>
+                            <p class="mb-0">{{ $job->vacancies }} positions</p>
                         </div>
                         <div class="col-md-6">
                             <h6 class="text-muted">Application Deadline</h6>
                             <p class="mb-0">
                                 <i class="fas fa-calendar me-2"></i>
-                                {{ $jobPosting->application_deadline ? $jobPosting->application_deadline->format('F j, Y') : 'Not set' }}
+                                {{ $job->application_deadline ? $job->application_deadline->format('F j, Y') : 'Not set' }}
                             </p>
                         </div>
                     </div>
 
-                    @if($jobPosting->min_salary || $jobPosting->max_salary)
+                    @if($job->min_salary || $job->max_salary)
                     <div class="mb-3">
                         <h6 class="text-muted">Salary Range</h6>
                         <p class="mb-0">
                             <i class="fas fa-money-bill-wave me-2"></i>
-                            ৳{{ number_format($jobPosting->min_salary ?? 0) }} - ৳{{ number_format($jobPosting->max_salary ?? 0) }}
+                            ৳{{ number_format($job->min_salary ?? 0) }} - ৳{{ number_format($job->max_salary ?? 0) }}
                         </p>
                     </div>
                     @endif
 
-                    @if($jobPosting->min_experience || $jobPosting->max_experience)
+                    @if($job->min_experience || $job->max_experience)
                     <div class="mb-3">
                         <h6 class="text-muted">Experience Required</h6>
                         <p class="mb-0">
-                            {{ $jobPosting->min_experience ?? 0 }} - {{ $jobPosting->max_experience ?? 0 }} years
+                            {{ $job->min_experience ?? 0 }} - {{ $job->max_experience ?? 0 }} years
                         </p>
                     </div>
                     @endif
 
                     <div class="d-flex gap-2 mb-3">
-                        @if($jobPosting->is_remote)
+                        @if($job->is_remote)
                             <span class="badge bg-success"><i class="fas fa-home me-1"></i>Remote Available</span>
                         @endif
-                        @if($jobPosting->is_urgent)
+                        @if($job->is_urgent)
                             <span class="badge bg-danger"><i class="fas fa-bolt me-1"></i>Urgent Hiring</span>
                         @endif
                     </div>
@@ -93,18 +93,18 @@
 
                     <div class="mb-4">
                         <h5 class="text-primary mb-3"><i class="fas fa-file-alt me-2"></i>Job Description</h5>
-                        <p style="white-space: pre-line;">{{ $jobPosting->description }}</p>
+                        <p style="white-space: pre-line;">{{ $job->description }}</p>
                     </div>
 
                     <div class="mb-4">
                         <h5 class="text-primary mb-3"><i class="fas fa-check-circle me-2"></i>Requirements</h5>
-                        <p style="white-space: pre-line;">{{ $jobPosting->requirements }}</p>
+                        <p style="white-space: pre-line;">{{ $job->requirements }}</p>
                     </div>
 
-                    @if($jobPosting->benefits)
+                    @if($job->benefits)
                     <div class="mb-4">
                         <h5 class="text-primary mb-3"><i class="fas fa-gift me-2"></i>Benefits</h5>
-                        <p style="white-space: pre-line;">{{ $jobPosting->benefits }}</p>
+                        <p style="white-space: pre-line;">{{ $job->benefits }}</p>
                     </div>
                     @endif
                 </div>
@@ -117,11 +117,11 @@
                     <h6 class="mb-0"><i class="fas fa-cog me-2"></i>Actions</h6>
                 </div>
                 <div class="card-body">
-                    <a href="{{ route('hr.recruitment.jobs.edit', $jobPosting) }}" class="btn btn-warning w-100 mb-2">
+                    <a href="{{ route('hr.recruitment.jobs.edit', $job) }}" class="btn btn-warning w-100 mb-2">
                         <i class="fas fa-edit me-2"></i>Edit Job Posting
                     </a>
 
-                    <form action="{{ route('hr.recruitment.jobs.destroy', $jobPosting) }}" method="POST" class="mb-2">
+                    <form action="{{ route('hr.recruitment.jobs.destroy', $job) }}" method="POST" class="mb-2">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-danger w-100" 
@@ -143,19 +143,19 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between mb-2">
                         <span>Total Applications:</span>
-                        <strong>{{ $jobPosting->applicants()->count() }}</strong>
+                        <strong>{{ $job->applicants()->count() }}</strong>
                     </div>
                     <div class="d-flex justify-content-between mb-2">
                         <span>New:</span>
-                        <strong>{{ $jobPosting->applicants()->where('status', 'New')->count() }}</strong>
+                        <strong>{{ $job->applicants()->where('status', 'New')->count() }}</strong>
                     </div>
                     <div class="d-flex justify-content-between mb-2">
                         <span>In Interview:</span>
-                        <strong>{{ $jobPosting->applicants()->where('status', 'Interview')->count() }}</strong>
+                        <strong>{{ $job->applicants()->where('status', 'Interview')->count() }}</strong>
                     </div>
                     <div class="d-flex justify-content-between">
                         <span>Hired:</span>
-                        <strong class="text-success">{{ $jobPosting->applicants()->where('status', 'Hired')->count() }}</strong>
+                        <strong class="text-success">{{ $job->applicants()->where('status', 'Hired')->count() }}</strong>
                     </div>
                 </div>
             </div>
@@ -169,20 +169,20 @@
                         <li class="mb-2">
                             <i class="fas fa-plus-circle text-primary me-2"></i>
                             <strong>Posted:</strong><br>
-                            <small class="text-muted ms-3">{{ $jobPosting->created_at->format('M j, Y H:i') }}</small>
+                            <small class="text-muted ms-3">{{ $job->created_at->format('M j, Y H:i') }}</small>
                         </li>
-                        @if($jobPosting->updated_at != $jobPosting->created_at)
+                        @if($job->updated_at != $job->created_at)
                         <li class="mb-2">
                             <i class="fas fa-edit text-warning me-2"></i>
                             <strong>Last Updated:</strong><br>
-                            <small class="text-muted ms-3">{{ $jobPosting->updated_at->format('M j, Y H:i') }}</small>
+                            <small class="text-muted ms-3">{{ $job->updated_at->format('M j, Y H:i') }}</small>
                         </li>
                         @endif
-                        @if($jobPosting->application_deadline)
+                        @if($job->application_deadline)
                         <li>
                             <i class="fas fa-hourglass-end text-danger me-2"></i>
                             <strong>Deadline:</strong><br>
-                            <small class="text-muted ms-3">{{ $jobPosting->application_deadline->format('M j, Y') }}</small>
+                            <small class="text-muted ms-3">{{ $job->application_deadline->format('M j, Y') }}</small>
                         </li>
                         @endif
                     </ul>
@@ -192,3 +192,4 @@
     </div>
 </div>
 @endsection
+

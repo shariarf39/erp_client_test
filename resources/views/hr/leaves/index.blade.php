@@ -173,30 +173,30 @@
                                             <a href="{{ route('hr.leaves.show', $leave) }}" 
                                                class="btn btn-sm btn-info" 
                                                title="View Details">
-                                                <i class="bi bi-eye"></i>
+                                                <i class="fas fa-eye"></i>
                                             </a>
                                             @if($leave->status === 'Pending')
                                                 <a href="{{ route('hr.leaves.edit', $leave) }}" 
                                                    class="btn btn-sm btn-warning" 
                                                    title="Edit">
-                                                    <i class="bi bi-pencil"></i>
+                                                    <i class="fas fa-edit"></i>
                                                 </a>
                                                 <form action="{{ route('hr.leaves.approve', $leave) }}" method="POST" class="d-inline">
                                                     @csrf
                                                     <button type="submit" class="btn btn-sm btn-success" title="Approve" onclick="return confirm('Approve this leave application?')">
-                                                        <i class="bi bi-check"></i>
+                                                        <i class="fas fa-check"></i>
                                                     </button>
                                                 </form>
                                                 <button type="button" class="btn btn-sm btn-danger" title="Reject" 
                                                         data-bs-toggle="modal" data-bs-target="#rejectModal{{ $leave->id }}">
-                                                    <i class="bi bi-x"></i>
+                                                    <i class="fas fa-times"></i>
                                                 </button>
                                             @endif
                                             @if(in_array($leave->status, ['Pending', 'Approved']))
                                                 <form action="{{ route('hr.leaves.cancel', $leave) }}" method="POST" class="d-inline">
                                                     @csrf
                                                     <button type="submit" class="btn btn-sm btn-secondary" title="Cancel" onclick="return confirm('Cancel this leave application?')">
-                                                        <i class="bi bi-slash-circle"></i>
+                                                        <i class="fas fa-ban"></i>
                                                     </button>
                                                 </form>
                                             @endif
@@ -205,7 +205,7 @@
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-sm btn-dark" title="Delete" onclick="return confirm('Delete this leave application?')">
-                                                        <i class="bi bi-trash"></i>
+                                                        <i class="fas fa-trash"></i>
                                                     </button>
                                                 </form>
                                             @endif
