@@ -69,26 +69,29 @@ class EmployeeController extends Controller
             'email' => 'required|email|unique:employees,email',
             'phone' => 'required|string|max:15',
             'gender' => 'required|in:Male,Female,Other',
-            'date_of_joining' => 'required|date',
+            'join_date' => 'required|date',
             'department_id' => 'required|exists:departments,id',
             'designation_id' => 'required|exists:designations,id',
             'branch_id' => 'nullable|exists:branches,id',
             'manager_id' => 'nullable|exists:employees,id',
-            'employee_type' => 'nullable|in:Permanent,Contract,Temporary,Intern',
-            'status' => 'nullable|in:Active,Inactive,On Leave,Terminated',
+            'employment_type' => 'nullable|in:Permanent,Contract,Temporary,Intern',
+            'status' => 'nullable|in:Active,Inactive,Resigned,Terminated',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'date_of_birth' => 'nullable|date',
-            'father_name' => 'nullable|string|max:100',
-            'mother_name' => 'nullable|string|max:100',
-            'present_address' => 'nullable|string',
-            'permanent_address' => 'nullable|string',
-            'emergency_contact' => 'nullable|string|max:15',
-            'nid_no' => 'nullable|string|max:20',
-            'passport_no' => 'nullable|string|max:20',
-            'tin_no' => 'nullable|string|max:20',
+            'marital_status' => 'nullable|in:Single,Married,Divorced,Widowed',
+            'address' => 'nullable|string',
+            'city' => 'nullable|string|max:100',
+            'state' => 'nullable|string|max:100',
+            'country' => 'nullable|string|max:100',
+            'postal_code' => 'nullable|string|max:20',
+            'emergency_contact_name' => 'nullable|string|max:100',
+            'emergency_contact_phone' => 'nullable|string|max:20',
+            'national_id' => 'nullable|string|max:50',
+            'passport_no' => 'nullable|string|max:50',
             'bank_name' => 'nullable|string|max:100',
             'bank_branch' => 'nullable|string|max:100',
-            'account_no' => 'nullable|string|max:50',
+            'bank_account' => 'nullable|string|max:50',
+            'confirmation_date' => 'nullable|date',
         ]);
 
         DB::beginTransaction();
@@ -97,9 +100,6 @@ class EmployeeController extends Controller
             if ($request->hasFile('photo')) {
                 $validated['photo'] = $request->file('photo')->store('employees', 'public');
             }
-
-            // Set full name
-            $validated['employee_name'] = $validated['first_name'] . ' ' . $validated['last_name'];
 
             // Create employee
             $employee = Employee::create($validated);
@@ -168,26 +168,29 @@ class EmployeeController extends Controller
             'email' => 'required|email|unique:employees,email,' . $id,
             'phone' => 'required|string|max:15',
             'gender' => 'required|in:Male,Female,Other',
-            'date_of_joining' => 'required|date',
+            'join_date' => 'required|date',
             'department_id' => 'required|exists:departments,id',
             'designation_id' => 'required|exists:designations,id',
             'branch_id' => 'nullable|exists:branches,id',
             'manager_id' => 'nullable|exists:employees,id',
-            'employee_type' => 'nullable|in:Permanent,Contract,Temporary,Intern',
-            'status' => 'nullable|in:Active,Inactive,On Leave,Terminated',
+            'employment_type' => 'nullable|in:Permanent,Contract,Temporary,Intern',
+            'status' => 'nullable|in:Active,Inactive,Resigned,Terminated',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'date_of_birth' => 'nullable|date',
-            'father_name' => 'nullable|string|max:100',
-            'mother_name' => 'nullable|string|max:100',
-            'present_address' => 'nullable|string',
-            'permanent_address' => 'nullable|string',
-            'emergency_contact' => 'nullable|string|max:15',
-            'nid_no' => 'nullable|string|max:20',
-            'passport_no' => 'nullable|string|max:20',
-            'tin_no' => 'nullable|string|max:20',
+            'marital_status' => 'nullable|in:Single,Married,Divorced,Widowed',
+            'address' => 'nullable|string',
+            'city' => 'nullable|string|max:100',
+            'state' => 'nullable|string|max:100',
+            'country' => 'nullable|string|max:100',
+            'postal_code' => 'nullable|string|max:20',
+            'emergency_contact_name' => 'nullable|string|max:100',
+            'emergency_contact_phone' => 'nullable|string|max:20',
+            'national_id' => 'nullable|string|max:50',
+            'passport_no' => 'nullable|string|max:50',
             'bank_name' => 'nullable|string|max:100',
             'bank_branch' => 'nullable|string|max:100',
-            'account_no' => 'nullable|string|max:50',
+            'bank_account' => 'nullable|string|max:50',
+            'confirmation_date' => 'nullable|date',
         ]);
 
         DB::beginTransaction();
@@ -200,9 +203,6 @@ class EmployeeController extends Controller
                 }
                 $validated['photo'] = $request->file('photo')->store('employees', 'public');
             }
-
-            // Set full name
-            $validated['employee_name'] = $validated['first_name'] . ' ' . $validated['last_name'];
 
             // Update employee
             $employee->update($validated);

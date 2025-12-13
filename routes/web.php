@@ -42,6 +42,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('employees', EmployeeController::class);
         Route::resource('departments', \App\Http\Controllers\HR\DepartmentController::class);
         Route::resource('designations', \App\Http\Controllers\HR\DesignationController::class);
+        Route::resource('branches', \App\Http\Controllers\HR\BranchController::class);
         Route::resource('leaves', \App\Http\Controllers\HR\LeaveController::class);
         Route::post('leaves/{leave}/approve', [\App\Http\Controllers\HR\LeaveController::class, 'approve'])->name('leaves.approve');
         Route::post('leaves/{leave}/reject', [\App\Http\Controllers\HR\LeaveController::class, 'reject'])->name('leaves.reject');

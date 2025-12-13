@@ -269,6 +269,12 @@
                             <a class="nav-link {{ request()->routeIs('hr.departments.*') ? 'active' : '' }}" href="{{ route('hr.departments.index') }}">
                                 <i class="fas fa-sitemap"></i> Departments
                             </a>
+                            <a class="nav-link {{ request()->routeIs('hr.branches.*') ? 'active' : '' }}" href="{{ route('hr.branches.index') }}">
+                                <i class="fas fa-code-branch"></i> Branches
+                            </a>
+                            <a class="nav-link {{ request()->routeIs('hr.designations.*') ? 'active' : '' }}" href="{{ route('hr.designations.index') }}">
+                                <i class="fas fa-id-badge"></i> Designations
+                            </a>
                             <a class="nav-link {{ request()->routeIs('hr.leaves.*') ? 'active' : '' }}" href="{{ route('hr.leaves.index') }}">
                                 <i class="fas fa-calendar-alt"></i> Leave Management
                             </a>

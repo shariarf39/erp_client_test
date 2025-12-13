@@ -49,7 +49,7 @@
                         <option value="">All Status</option>
                         <option value="Active" {{ request('status') == 'Active' ? 'selected' : '' }}>Active</option>
                         <option value="Inactive" {{ request('status') == 'Inactive' ? 'selected' : '' }}>Inactive</option>
-                        <option value="On Leave" {{ request('status') == 'On Leave' ? 'selected' : '' }}>On Leave</option>
+                        <option value="Resigned" {{ request('status') == 'Resigned' ? 'selected' : '' }}>Resigned</option>
                         <option value="Terminated" {{ request('status') == 'Terminated' ? 'selected' : '' }}>Terminated</option>
                     </select>
                 </div>
@@ -98,12 +98,12 @@
                                 <strong>{{ $employee->full_name }}</strong>
                             </td>
                             <td>{{ $employee->department->name ?? 'N/A' }}</td>
-                            <td>{{ $employee->designation->name ?? 'N/A' }}</td>
+                            <td>{{ $employee->designation->title ?? 'N/A' }}</td>
                             <td>{{ $employee->email }}</td>
                             <td>{{ $employee->phone }}</td>
-                            <td>{{ \Carbon\Carbon::parse($employee->date_of_joining)->format('d M Y') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($employee->join_date)->format('d M Y') }}</td>
                             <td>
-                                <span class="badge bg-{{ $employee->status === 'Active' ? 'success' : ($employee->status === 'On Leave' ? 'warning' : 'danger') }}">
+                                <span class="badge bg-{{ $employee->status === 'Active' ? 'success' : 'danger' }}">
                                     {{ $employee->status }}
                                 </span>
                             </td>

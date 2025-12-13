@@ -8,4 +8,22 @@ use Illuminate\Database\Eloquent\Model;
 class Designation extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'title',
+        'code',
+        'description',
+        'level',
+        'is_active'
+    ];
+
+    protected $casts = [
+        'is_active' => 'boolean',
+        'level' => 'integer',
+    ];
+
+    public function employees()
+    {
+        return $this->hasMany(Employee::class);
+    }
 }

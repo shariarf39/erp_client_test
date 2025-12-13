@@ -17,7 +17,7 @@
                     </div>
                 @endif
                 <h4>{{ $employee->full_name }}</h4>
-                <p class="text-muted">{{ $employee->designation->name ?? 'N/A' }}</p>
+                <p class="text-muted">{{ $employee->designation->title ?? 'N/A' }}</p>
                 <span class="badge bg-{{ $employee->status === 'Active' ? 'success' : 'danger' }} mb-3">
                     {{ $employee->status }}
                 </span>
@@ -57,13 +57,25 @@
                         <td>{{ $employee->branch->name ?? 'N/A' }}</td>
                     </tr>
                     <tr>
-                        <td><strong>Type:</strong></td>
-                        <td>{{ $employee->employee_type }}</td>
+                        <td><strong>Employment Type:</strong></td>
+                        <td>{{ $employee->employment_type }}</td>
                     </tr>
                     <tr>
-                        <td><strong>Joining Date:</strong></td>
-                        <td>{{ \Carbon\Carbon::parse($employee->date_of_joining)->format('d M Y') }}</td>
+                        <td><strong>Join Date:</strong></td>
+                        <td>{{ \Carbon\Carbon::parse($employee->join_date)->format('d M Y') }}</td>
                     </tr>
+                    @if($employee->confirmation_date)
+                        <tr>
+                            <td><strong>Confirmation Date:</strong></td>
+                            <td>{{ \Carbon\Carbon::parse($employee->confirmation_date)->format('d M Y') }}</td>
+                        </tr>
+                    @endif
+                    @if($employee->resign_date)
+                        <tr>
+                            <td><strong>Resign Date:</strong></td>
+                            <td>{{ \Carbon\Carbon::parse($employee->resign_date)->format('d M Y') }}</td>
+                        </tr>
+                    @endif
                     @if($employee->manager)
                         <tr>
                             <td><strong>Reports To:</strong></td>
@@ -107,14 +119,6 @@
                                 <td>{{ $employee->full_name }}</td>
                             </tr>
                             <tr>
-                                <th>Father's Name</th>
-                                <td>{{ $employee->father_name ?? 'N/A' }}</td>
-                            </tr>
-                            <tr>
-                                <th>Mother's Name</th>
-                                <td>{{ $employee->mother_name ?? 'N/A' }}</td>
-                            </tr>
-                            <tr>
                                 <th>Date of Birth</th>
                                 <td>{{ $employee->date_of_birth ? \Carbon\Carbon::parse($employee->date_of_birth)->format('d M Y') : 'N/A' }}</td>
                             </tr>
@@ -141,16 +145,32 @@
                                 <td>{{ $employee->phone }}</td>
                             </tr>
                             <tr>
-                                <th>Emergency Contact</th>
-                                <td>{{ $employee->emergency_contact ?? 'N/A' }}</td>
+                                <th>Emergency Contact Name</th>
+                                <td>{{ $employee->emergency_contact_name ?? 'N/A' }}</td>
                             </tr>
                             <tr>
-                                <th>Present Address</th>
-                                <td>{{ $employee->present_address ?? 'N/A' }}</td>
+                                <th>Emergency Contact Phone</th>
+                                <td>{{ $employee->emergency_contact_phone ?? 'N/A' }}</td>
                             </tr>
                             <tr>
-                                <th>Permanent Address</th>
-                                <td>{{ $employee->permanent_address ?? 'N/A' }}</td>
+                                <th>Address</th>
+                                <td>{{ $employee->address ?? 'N/A' }}</td>
+                            </tr>
+                            <tr>
+                                <th>City</th>
+                                <td>{{ $employee->city ?? 'N/A' }}</td>
+                            </tr>
+                            <tr>
+                                <th>State</th>
+                                <td>{{ $employee->state ?? 'N/A' }}</td>
+                            </tr>
+                            <tr>
+                                <th>Country</th>
+                                <td>{{ $employee->country ?? 'N/A' }}</td>
+                            </tr>
+                            <tr>
+                                <th>Postal Code</th>
+                                <td>{{ $employee->postal_code ?? 'N/A' }}</td>
                             </tr>
                         </table>
                     </div>
@@ -159,16 +179,12 @@
                     <div class="tab-pane fade" id="documents">
                         <table class="table table-bordered">
                             <tr>
-                                <th width="30%">NID Number</th>
-                                <td>{{ $employee->nid_no ?? 'N/A' }}</td>
+                                <th width="30%">National ID Number</th>
+                                <td>{{ $employee->national_id ?? 'N/A' }}</td>
                             </tr>
                             <tr>
                                 <th>Passport Number</th>
                                 <td>{{ $employee->passport_no ?? 'N/A' }}</td>
-                            </tr>
-                            <tr>
-                                <th>TIN Number</th>
-                                <td>{{ $employee->tin_no ?? 'N/A' }}</td>
                             </tr>
                             <tr>
                                 <th>Bank Name</th>
@@ -179,8 +195,8 @@
                                 <td>{{ $employee->bank_branch ?? 'N/A' }}</td>
                             </tr>
                             <tr>
-                                <th>Account Number</th>
-                                <td>{{ $employee->account_no ?? 'N/A' }}</td>
+                                <th>Bank Account Number</th>
+                                <td>{{ $employee->bank_account ?? 'N/A' }}</td>
                             </tr>
                         </table>
                     </div>
