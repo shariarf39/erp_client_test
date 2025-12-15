@@ -27,6 +27,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
+    // Admin Routes (Super Admin only)
+    Route::prefix('admin')->name('admin.')->middleware('module.permission:Settings')->group(function () {
+        Route::get('/users', [\App\Http\Controllers\Admin\UserRoleController::class, 'index'])->name('users.index');
+        Route::put('/users/{user}/role', [\App\Http\Controllers\Admin\UserRoleController::class, 'updateRole'])->name('users.update-role');
+    });
+    
     // Profile & Settings
     Route::get('/profile', [\App\Http\Controllers\ProfileController::class, 'index'])->name('profile.index');
     Route::put('/profile', [\App\Http\Controllers\ProfileController::class, 'updateProfile'])->name('profile.update');
@@ -36,6 +42,12 @@ Route::middleware('auth')->group(function () {
     Route::put('/settings/notifications', [\App\Http\Controllers\SettingsController::class, 'updateNotifications'])->name('settings.notifications');
     Route::put('/settings/security', [\App\Http\Controllers\SettingsController::class, 'updateSecurity'])->name('settings.security');
     Route::put('/settings/preferences', [\App\Http\Controllers\SettingsController::class, 'updatePreferences'])->name('settings.preferences');
+    
+    // Admin Module (Role Management)
+    Route::prefix('admin')->name('admin.')->group(function () {
+        Route::get('/users', [\App\Http\Controllers\Admin\UserRoleController::class, 'index'])->name('users.index');
+        Route::put('/users/{user}/role', [\App\Http\Controllers\Admin\UserRoleController::class, 'updateRole'])->name('users.update-role');
+    });
     
     // HR Module
     Route::prefix('hr')->name('hr.')->group(function () {

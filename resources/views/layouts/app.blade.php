@@ -254,6 +254,7 @@
                 <i class="fas fa-home"></i> Dashboard
             </a>
                     
+            @if(canAccessModule('HR'))
                     <!-- HR Management Dropdown -->
                     <div class="nav-dropdown {{ request()->routeIs('hr.*') ? 'show' : '' }}">
                         <a class="nav-link {{ request()->routeIs('hr.*') ? 'active' : '' }}">
@@ -331,7 +332,9 @@
                             </a>
                         </div>
                     </div>
+            @endif
                     
+            @if(canAccessModule('Payroll'))
                     <div class="text-white-50 small px-3 mt-3 mb-2">PAYROLL</div>
                     <a class="nav-link {{ request()->routeIs('payroll.*') ? 'active' : '' }}" href="{{ route('payroll.payroll.index') }}">
                         <i class="fas fa-money-check-alt"></i> Payroll
@@ -339,12 +342,16 @@
                     <a class="nav-link" href="{{ route('payroll.salary-structures.index') }}">
                         <i class="fas fa-coins"></i> Salary Structure
                     </a>
+            @endif
                     
+            @if(canAccessModule('Attendance'))
                     <div class="text-white-50 small px-3 mt-3 mb-2">ATTENDANCE</div>
                     <a class="nav-link {{ request()->routeIs('attendance.*') ? 'active' : '' }}" href="{{ route('attendance.attendance.index') }}">
                         <i class="fas fa-clock"></i> Attendance
                     </a>
+            @endif
                     
+            @if(canAccessModule('Inventory'))
                     <div class="text-white-50 small px-3 mt-3 mb-2">INVENTORY</div>
                     <a class="nav-link {{ request()->routeIs('inventory.*') ? 'active' : '' }}" href="{{ route('inventory.items.index') }}">
                         <i class="fas fa-boxes"></i> Items
@@ -352,7 +359,9 @@
                     <a class="nav-link" href="{{ route('inventory.stock.index') }}">
                         <i class="fas fa-warehouse"></i> Stock
                     </a>
+            @endif
                     
+            @if(canAccessModule('Purchase'))
                     <div class="text-white-50 small px-3 mt-3 mb-2">PURCHASE</div>
                     <a class="nav-link {{ request()->routeIs('purchase.*') ? 'active' : '' }}" href="{{ route('purchase.orders.index') }}">
                         <i class="fas fa-shopping-cart"></i> Purchase Orders
@@ -360,11 +369,13 @@
                     <a class="nav-link" href="{{ route('purchase.vendors.index') }}">
                         <i class="fas fa-truck"></i> Vendors
                     </a>
+            @endif
                     
+            @if(canAccessModule('Sales'))
                     <!-- Sales Manager Dropdown -->
                     <div class="nav-dropdown {{ request()->routeIs('sales.quotations.*') || request()->routeIs('sales.orders.*') || request()->routeIs('sales.pricing.*') || request()->routeIs('sales.contracts.*') || request()->routeIs('sales.delivery-notes.*') || request()->routeIs('sales.invoices.*') || request()->routeIs('sales.analytics.*') ? 'show' : '' }}">
                         <a class="nav-link {{ request()->routeIs('sales.quotations.*') || request()->routeIs('sales.orders.*') || request()->routeIs('sales.pricing.*') || request()->routeIs('sales.contracts.*') || request()->routeIs('sales.delivery-notes.*') || request()->routeIs('sales.invoices.*') || request()->routeIs('sales.analytics.*') ? 'active' : '' }}">
-                            <span><i class="fas fa-shopping-cart"></i> Sales & Order Management</span>
+                            <span><i class="fas fa-shopping-cart"></i> Sales Management</span>
                             <i class="fas fa-chevron-down dropdown-arrow"></i>
                         </a>
                         <div class="nav-dropdown-menu">
@@ -391,6 +402,14 @@
                             </a>
                         </div>
                     </div>
+            @endif
+                    
+            @if(canAccessModule('Accounts'))
+                    <div class="text-white-50 small px-3 mt-3 mb-2">ACCOUNTING</div>
+                    <a class="nav-link" href="#">
+                        <i class="fas fa-calculator"></i> Accounts
+                    </a>
+            @endif
                     
                     <!-- Operation Manager Dropdown -->
                     <div class="nav-dropdown {{ request()->routeIs('sales.orders.*') || request()->routeIs('sales.delivery-notes.*') || request()->routeIs('sales.analytics.*') ? 'show' : '' }}">
@@ -475,6 +494,17 @@
                             </a>
                         </div>
                     </div>
+                    
+            @if(canAccessModule('Settings'))
+                    <!-- System Settings -->
+                    <div class="text-white-50 small px-3 mt-3 mb-2">SETTINGS</div>
+                    <a class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}" href="{{ route('admin.users.index') }}">
+                        <i class="fas fa-user-shield"></i> User Roles
+                    </a>
+                    <a class="nav-link {{ request()->routeIs('settings.*') ? 'active' : '' }}" href="{{ route('settings.index') }}">
+                        <i class="fas fa-cog"></i> System Settings
+                    </a>
+            @endif
                 </nav>
             </div>
 
